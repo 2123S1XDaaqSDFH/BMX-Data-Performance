@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMX Performance Data</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <div id="login-screen" class="overlay">
+        <div class="auth-box">
+            <h2>BMX Tech Login</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="login()">Entrar</button>
+            <button onclick="register()" class="secondary">Registrarse</button>
+        </div>
+    </div>
+
+    <main id="dashboard" class="hidden">
+        <nav>
+            <h1>BMX <span>DATA</span></h1>
+            <button onclick="logout()">Cerrar Sesión</button>
+        </nav>
+
+        <section class="top-stats">
+            <div class="card form-card">
+                <h3>Registrar Entrenamiento</h3>
+                <form id="data-form">
+                    <input type="number" id="gate-time" step="0.01" placeholder="Tiempo Gate (s)" required>
+                    <input type="number" id="top-speed" placeholder="Velocidad Máx (km/h)" required>
+                    <select id="feeling">
+                        <option value="Excelente">Excelente</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Cansado">Cansado</option>
+                    </select>
+                    <button type="submit">Subir Datos</button>
+                </form>
+            </div>
+
+            <div class="card stat-highlight">
+                <h3>Último Mejor Tiempo</h3>
+                <p id="best-time">0.00s</p>
+            </div>
+        </section>
+
+        <section class="charts">
+            <div class="card chart-card">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
