@@ -4,207 +4,414 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GateLogic Pro | Medellín BMX Performance Lab</title>
-    
-    <meta name="description" content="Sistema de telemetría avanzada para atletas de BMX Racing.">
-    <meta name="author" content="Julián - Web Design & Programming">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-black: #050505;
+            --card-bg: #0a0a0a;
+            --primary: #00ff88;
+            --primary-glow: rgba(0, 255, 136, 0.3);
+            --text-white: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --font-main: 'Inter', sans-serif;
+            --font-racing: 'Rajdhani', sans-serif;
+        }
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        @page {
+            size: A4;
+            margin: 0;
+            background-color: var(--bg-black);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+        }
+
+        /* --- AUTH SECTION --- */
+        .auth-viewport {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #111, #050505);
+            padding: 20px;
+        }
+
+        .auth-master-container {
+            width: 1000px;
+            height: 650px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+        }
+
+        .auth-visual-side {
+            flex: 1.1;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511994298241-608e28f14f66?q=80&w=2070') center/cover;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .brand-top h2 {
+            font-family: var(--font-racing);
+            font-size: 2.5rem;
+            letter-spacing: -2px;
+            margin: 0;
+        }
+
+        .brand-top h2 span { color: var(--primary); }
+        .brand-line { width: 50px; height: 3px; background: var(--primary); margin-top: 10px; }
+
+        .brand-info h1 {
+            font-family: var(--font-racing);
+            font-size: 4rem;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .brand-info h1 span { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
+        .brand-info p { color: var(--text-dim); font-size: 0.95rem; max-width: 350px; line-height: 1.6; }
+
+        .auth-form-side {
+            flex: 0.9;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-header h3 { font-family: var(--font-racing); font-size: 1.8rem; margin-bottom: 5px; }
+        .auth-header p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 40px; }
+
+        .auth-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.03);
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .tab-trigger {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 10px;
+            font-family: var(--font-main);
+        }
+
+        .tab-trigger.active {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .input-group { margin-bottom: 25px; }
+        .input-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary); opacity: 0.6; }
+        .input-wrapper input {
+            width: 100%;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 18px 20px 18px 55px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            background: rgba(0, 255, 136, 0.05);
+            outline: none;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            border: none;
+            border-radius: 18px;
+            font-weight: 800;
+            font-family: var(--font-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+
+        /* --- DASHBOARD VIEW (Page Break Simulator) --- */
+        .dashboard-preview {
+            page-break-before: always;
+            padding: 50px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 30px;
+        }
+
+        .kpi-card p { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 10px; letter-spacing: 2px; }
+        .kpi-val { font-family: var(--font-racing); font-size: 2.8rem; font-weight: 700; color: var(--primary); }
+        .kpi-val span { font-size: 1rem; color: var(--text-dim); margin-left: 5px; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+        }
+
+        .form-panel {
+            background: linear-gradient(145deg, #0d0d0d, #050505);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 35px;
+            height: fit-content;
+        }
+
+        .chart-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 35px;
+            min-height: 500px;
+        }
+
+        .fake-chart {
+            width: 100%;
+            height: 350px;
+            border-left: 2px solid #222;
+            border-bottom: 2px solid #222;
+            position: relative;
+            margin-top: 30px;
+        }
+
+        .chart-line {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(transparent, rgba(0,255,136,0.1));
+            border-top: 3px solid var(--primary);
+            clip-path: polygon(0% 80%, 20% 50%, 40% 70%, 60% 30%, 80% 40%, 100% 10%, 100% 100%, 0% 100%);
+        }
+
+        .history-table {
+            width: 100%;
+            margin-top: 50px;
+            border-collapse: collapse;
+        }
+
+        .history-table th { text-align: left; font-size: 0.7rem; color: var(--text-dim); padding: 15px; border-bottom: 1px solid #111; }
+        .history-table td { padding: 20px 15px; border-bottom: 1px solid #0a0a0a; font-size: 0.85rem; }
+        .text-neon { color: var(--primary); font-weight: 700; }
+
+        .footer-system {
+            margin-top: 100px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #222;
+            letter-spacing: 5px;
+        }
+    </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
-    <div id="app-preloader" class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center">
-        <div class="loader-container relative">
-            <svg class="w-24 h-24 rotate-[-90deg]" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
-                <circle id="loader-circle" cx="50" cy="50" r="45" fill="none" stroke="#00ff88" stroke-width="2" stroke-dasharray="283" stroke-dashoffset="283"/>
-            </svg>
-            <div class="absolute inset-0 flex items-center justify-center font-bold text-xs">GL</div>
+    <!-- PAGE 1: AUTHENTICATION INTERFACE -->
+    <div class="auth-viewport">
+        <div class="auth-master-container">
+            <div class="auth-visual-side">
+                <div class="brand-top">
+                    <h2>G-<span>LOGIC</span></h2>
+                    <div class="brand-line"></div>
+                </div>
+                <div class="brand-info">
+                    <p style="color:var(--primary); font-family:'JetBrains Mono'; font-size: 0.7rem; margin-bottom:15px;">// MEDELLÍN PERFORMANCE HUB</p>
+                    <h1>DOMINA CADA<br><span>PRIMERA RECTA</span></h1>
+                    <p>Analítica de precisión para pilotos de élite. Registra, analiza y optimiza tus tiempos en la pista de Belén.</p>
+                </div>
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.2);">ESTACIÓN DE TELEMETRÍA 2026.04</div>
+            </div>
+
+            <div class="auth-form-side">
+                <div class="auth-header">
+                    <h3>ACCESO DE ATLETA</h3>
+                    <p>Ingresa tus credenciales para sincronizar telemetría.</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <div class="tab-trigger active">LOGIN</div>
+                    <div class="tab-trigger">REGISTRO</div>
+                </div>
+
+                <div class="input-group">
+                    <label>ID ATLETA (EMAIL)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-at"></i>
+                        <input type="email" value="julian.bmx@gatelogic.co" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>CONTRASEÑA SEGURA</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input type="password" value="********" readonly>
+                    </div>
+                </div>
+
+                <button class="btn-auth">
+                    AUTENTICAR SISTEMA <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                </button>
+
+                <div style="margin-top: 50px; text-align: center; font-size: 0.6rem; color: #333; font-family: 'JetBrains Mono';">
+                    GATE-ENGINE v2.4.1 // BUILD_2026_MED
+                </div>
+            </div>
         </div>
-        <h2 class="mt-6 font-rajdhani tracking-[0.3em] text-sm animate-pulse">SISTEMA INICIANDO...</h2>
     </div>
 
-    <div id="toast-container" class="fixed top-6 right-6 z-[9000] flex flex-col gap-3"></div>
-
-    <section id="login-screen" class="min-h-screen flex items-center justify-center p-6 lg:p-0">
-        <div class="auth-master-container w-full max-w-[1100px] bg-[#0a0a0a] rounded-[32px] border border-white/5 overflow-hidden flex shadow-2xl">
-            
-            <div class="hidden lg:flex flex-1 relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1511994298241-608e28f14f66?q=80&w=2070');">
-                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent"></div>
-                <div class="relative z-10 p-12 flex flex-col justify-between h-full">
-                    <div class="brand-top">
-                        <h2 class="text-3xl font-rajdhani font-bold italic tracking-tighter">G-<span>LOGIC</span></h2>
-                        <div class="h-[2px] w-12 bg-[#00ff88] mt-2"></div>
-                    </div>
-                    <div class="brand-info">
-                        <span class="text-[#00ff88] font-mono text-xs mb-4 block tracking-widest">// MEDELLÍN PERFORMANCE HUB</span>
-                        <h1 class="text-5xl font-rajdhani font-bold leading-none mb-6">DOMINA CADA<br><span class="text-[#00ff88]">PRIMERA RECTA</span></h1>
-                        <p class="text-white/50 text-sm max-w-sm leading-relaxed">Analítica de precisión para pilotos de élite. Registra, analiza y optimiza tus tiempos en la pista de Belén.</p>
-                    </div>
-                </div>
+    <!-- PAGE 2: DASHBOARD INTERFACE -->
+    <div class="dashboard-preview">
+        <div class="dashboard-header">
+            <div>
+                <p style="font-size: 0.7rem; color: var(--primary); font-weight: 800; letter-spacing: 3px; margin-bottom: 5px;">DASHBOARD PRINCIPAL</p>
+                <h2 style="font-family: var(--font-racing); font-size: 2.2rem; margin: 0;">SISTEMA GATELOGIC <span style="color:var(--text-dim);">PRO</span></h2>
             </div>
-
-            <div class="flex-1 p-10 lg:p-16 flex flex-col justify-center">
-                <div class="auth-header mb-10">
-                    <h3 class="text-2xl font-rajdhani font-bold mb-2">ACCESO DE ATLETA</h3>
-                    <p class="text-white/40 text-sm">Ingresa tus credenciales para sincronizar telemetría.</p>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="text-align: right;">
+                    <p style="font-size: 0.8rem; font-weight: 800; margin: 0;">JULIÁN</p>
+                    <p style="font-size: 0.6rem; color: var(--primary); margin: 0;">PILOTO ÉLITE</p>
                 </div>
-
-                <div class="auth-tabs flex bg-white/5 p-1 rounded-xl mb-8">
-                    <button class="flex-1 py-3 text-xs font-bold rounded-lg bg-[#00ff88] text-black transition-all" onclick="switchAuthTab('login')">LOGIN</button>
-                    <button class="flex-1 py-3 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all" onclick="switchAuthTab('register')">REGISTRO</button>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="input-group">
-                        <label class="text-[10px] tracking-widest text-white/30 font-bold mb-2 block">CORREO ELECTRÓNICO</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-[#00ff88]/50"></i>
-                            <input type="email" id="email" class="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-xl focus:border-[#00ff88] focus:bg-[#00ff88]/5 outline-none transition-all text-sm" placeholder="usuario@gatelogic.pro">
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label class="text-[10px] tracking-widest text-white/30 font-bold mb-2 block">CONTRASEÑA SEGURA</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-shield-halved absolute left-4 top-1/2 -translate-y-1/2 text-[#00ff88]/50"></i>
-                            <input type="password" id="password" class="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-xl focus:border-[#00ff88] focus:bg-[#00ff88]/5 outline-none transition-all text-sm" placeholder="••••••••">
-                        </div>
-                    </div>
-                    <button onclick="login()" class="w-full bg-[#00ff88] text-black font-bold py-5 rounded-xl hover:shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                        AUTENTICAR SISTEMA <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </button>
-                </div>
-
-                <footer class="mt-12 text-center text-[10px] text-white/20 font-mono">
-                    GATE-ENGINE v2.4.1 // BUILD_2026_MED
-                </footer>
+                <div style="width: 50px; height: 50px; background: #111; border-radius: 50%; border: 2px solid var(--primary);"></div>
             </div>
         </div>
-    </section>
 
-    <main id="dashboard" class="hidden min-h-screen flex bg-[#050505]">
-        
-        <aside class="w-[80px] hover:w-[240px] bg-black border-r border-white/5 flex flex-col py-8 transition-all duration-500 group overflow-hidden z-50">
-            <div class="flex items-center px-6 mb-12">
-                <div class="w-8 h-8 bg-[#00ff88] rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-black">G</div>
-                <span class="ml-4 font-rajdhani font-bold tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">GATE-LOGIC</span>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <p>PERSONAL BEST</p>
+                <div class="kpi-val">01.125<span>s</span></div>
             </div>
-            
-            <nav class="flex-1 space-y-2 px-3">
-                <a href="#" class="flex items-center h-12 rounded-xl bg-[#00ff88]/10 text-[#00ff88] px-4 group/item">
-                    <i class="fa-solid fa-chart-simple w-6 text-center"></i>
-                    <span class="ml-4 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">DASHBOARD</span>
-                </a>
-                <a href="#" class="flex items-center h-12 rounded-xl text-white/40 hover:bg-white/5 hover:text-white px-4 transition-all">
-                    <i class="fa-solid fa-stopwatch w-6 text-center"></i>
-                    <span class="ml-4 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">SESIONES</span>
-                </a>
-                <a href="#" class="flex items-center h-12 rounded-xl text-white/40 hover:bg-white/5 hover:text-white px-4 transition-all">
-                    <i class="fa-solid fa-bicycle w-6 text-center"></i>
-                    <span class="ml-4 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">MI BICICLETA</span>
-                </a>
-            </nav>
-
-            <div class="px-3 mt-auto">
-                <button onclick="logout()" class="w-full flex items-center h-12 rounded-xl text-red-500/50 hover:bg-red-500/10 hover:text-red-500 px-4 transition-all">
-                    <i class="fa-solid fa-power-off w-6 text-center"></i>
-                    <span class="ml-4 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">CERRAR SESIÓN</span>
-                </button>
+            <div class="kpi-card">
+                <p>VELOCIDAD PICO</p>
+                <div class="kpi-val">48.2<span>km/h</span></div>
             </div>
-        </aside>
-
-        <div class="flex-1 flex flex-col h-screen overflow-hidden">
-            
-            <header class="h-20 border-b border-white/5 px-8 flex items-center justify-between bg-black/50 backdrop-blur-xl">
-                <div class="flex items-center gap-4">
-                    <div class="p-2 bg-white/5 rounded-lg">
-                        <i class="fa-solid fa-location-dot text-[#00ff88] text-xs"></i>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-white/30 font-bold uppercase tracking-tighter">Pista Actual</p>
-                        <p class="text-sm font-rajdhani font-bold">Belén - Mariana Pajón</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-6">
-                    <div class="text-right hidden sm:block">
-                        <p id="user-display-name" class="text-sm font-bold font-rajdhani">JULIÁN</p>
-                        <p class="text-[10px] text-[#00ff88] font-mono tracking-widest">PILOTO ÉLITE</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-full border-2 border-[#00ff88]/20 p-1">
-                        <img src="https://i.pravatar.cc/100?u=julian" alt="Avatar" class="w-full h-full rounded-full grayscale hover:grayscale-0 transition-all">
-                    </div>
-                </div>
-            </header>
-
-            <div class="flex-1 overflow-y-auto p-8 scrollbar-hide">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="stat-card p-6 bg-white/5 border border-white/5 rounded-3xl group hover:border-[#00ff88]/30 transition-all">
-                        <p class="text-white/30 text-[10px] font-bold tracking-widest mb-2 uppercase">Personal Best</p>
-                        <div class="flex items-baseline gap-2">
-                            <span id="best-time" class="text-4xl font-rajdhani font-bold text-[#00ff88]">--.---</span>
-                            <span class="text-sm text-white/30">s</span>
-                        </div>
-                    </div>
-                    </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
-                    <div class="lg:col-span-4 space-y-8">
-                        <div class="p-8 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-[32px] relative overflow-hidden">
-                            <div class="absolute -right-12 -top-12 w-40 h-40 bg-[#00ff88]/10 blur-[80px] rounded-full"></div>
-                            <h4 class="text-xl font-rajdhani font-bold mb-6 flex items-center gap-3">
-                                <i class="fa-solid fa-plus-circle text-[#00ff88]"></i> REGISTRO DE HIT
-                            </h4>
-                            <form id="data-form" class="space-y-6">
-                                <div class="form-group">
-                                    <label class="text-[10px] text-white/40 font-bold mb-2 block">TIEMPO DE SALIDA (GATE)</label>
-                                    <input type="number" id="gate-time" step="0.001" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-2xl font-rajdhani font-bold text-center text-[#00ff88]" placeholder="0.000">
-                                </div>
-                                <button type="submit" class="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-[#00ff88] transition-all">SINCRONIZAR DATOS</button>
-                            </form>
-                        </div>
-
-                        <div class="p-8 bg-white/5 border border-white/5 rounded-[32px]">
-                            <h4 class="text-sm font-rajdhani font-bold mb-4 uppercase tracking-widest text-white/40">Configuración Actual</h4>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center py-3 border-b border-white/5">
-                                    <span class="text-xs text-white/50">Cuadro</span>
-                                    <span class="text-xs font-bold">GW G1 Plus Pro 3XL</span>
-                                </div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="lg:col-span-8 space-y-8">
-                        <div class="p-8 bg-black border border-white/5 rounded-[32px] min-h-[450px] flex flex-col">
-                            <div class="flex justify-between items-center mb-8">
-                                <h4 class="font-rajdhani font-bold text-lg uppercase tracking-wider">Historial de Progresión</h4>
-                                <div class="flex gap-2">
-                                    <button class="px-4 py-2 bg-white/5 rounded-lg text-[10px] font-bold text-[#00ff88]">GATE</button>
-                                    <button class="px-4 py-2 text-[10px] font-bold text-white/30 hover:text-white">VELOCIDAD</button>
-                                </div>
-                            </div>
-                            <div class="flex-1 relative">
-                                <canvas id="performanceChart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="p-8 bg-white/5 border border-white/5 rounded-[32px] overflow-hidden">
-                             </div>
-                    </div>
-
-                </div>
+            <div class="kpi-card">
+                <p>CONSISTENCIA</p>
+                <div class="kpi-val">94.8<span>%</span></div>
+            </div>
+            <div class="kpi-card">
+                <p>SESIONES (MES)</p>
+                <div class="kpi-val">12<span>hits</span></div>
             </div>
         </div>
-    </main>
 
-    <script type="module" src="app.js"></script>
+        <div class="main-layout">
+            <div class="form-panel">
+                <h4 style="font-family: var(--font-racing); font-size: 1.2rem; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-plus-circle" style="color:var(--primary);"></i> REGISTRO DE HIT
+                </h4>
+                <div class="input-group">
+                    <label>TIEMPO DE SALIDA (GATE)</label>
+                    <div style="background: #000; border: 1px solid #222; padding: 25px; border-radius: 20px; text-align: center; font-family: var(--font-racing); font-size: 3rem; color: var(--primary); font-weight: 700;">
+                        0.000
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>CONFIGURACIÓN DE BICI</label>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin: 0;">GW G1 Plus Pro 3XL / 44x16</p>
+                </div>
+                <button class="btn-auth" style="background: white; color: black; box-shadow: none;">SINCRONIZAR DATOS</button>
+            </div>
+
+            <div class="chart-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4 style="font-family: var(--font-racing); font-size: 1.2rem; text-transform: uppercase;">Progresión Temporal</h4>
+                    <div style="font-size: 0.6rem; background: #111; padding: 5px 15px; border-radius: 20px; color: var(--primary);">MÉTRICA: GATE (s)</div>
+                </div>
+                <div class="fake-chart">
+                    <div class="chart-line"></div>
+                </div>
+
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>FECHA</th>
+                            <th>GATE TIME</th>
+                            <th>V. MAX</th>
+                            <th>FEELING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>28 ABR, 2026</td>
+                            <td class="text-neon">01.125s</td>
+                            <td>47.8 km/h</td>
+                            <td>Optimizado</td>
+                        </tr>
+                        <tr>
+                            <td>26 ABR, 2026</td>
+                            <td class="text-neon">01.210s</td>
+                            <td>46.2 km/h</td>
+                            <td>Fatiga</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-system">
+            DESIGNED & PROGRAMMED BY JOEX // MEDELLÍN PERFORMANCE SYSTEMS
+        </div>
+    </div>
+
 </body>
 </html>
