@@ -1,130 +1,71 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GateLogic Pro | Medellín BMX Performance Lab</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GateLogic Pro | Medellín BMX Performance</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
+        /* =========================================================
+           1. CORE DESIGN SYSTEM (CSS)
+           ========================================================= */
         :root {
-            --bg-black: #050505;
-            --card-bg: #0a0a0a;
             --primary: #00ff88;
             --primary-glow: rgba(0, 255, 136, 0.3);
-            --text-white: #ffffff;
+            --bg-dark: #050505;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
             --text-dim: rgba(255, 255, 255, 0.5);
-            --border-color: rgba(255, 255, 255, 0.05);
-            --font-main: 'Inter', sans-serif;
             --font-racing: 'Rajdhani', sans-serif;
         }
 
-        @page {
-            size: A4;
-            margin: 0;
-            background-color: var(--bg-black);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-black);
-            color: var(--text-white);
-            font-family: var(--font-main);
+            background: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            height: 100vh;
         }
 
-        /* --- AUTH SECTION --- */
-        .auth-viewport {
+        .hidden { display: none !important; }
+
+        /* --- AUTH SCREEN --- */
+        #auth-section {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at center, #111, #050505);
-            padding: 20px;
+            background: radial-gradient(circle at center, #111, #000);
         }
 
-        .auth-master-container {
-            width: 1000px;
-            height: 650px;
+        .auth-card {
+            width: 450px;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 40px;
-            display: flex;
-            overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
-        }
-
-        .auth-visual-side {
-            flex: 1.1;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1511994298241-608e28f14f66?q=80&w=2070') center/cover;
+            backdrop-filter: blur(20px);
             padding: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
 
-        .brand-top h2 {
+        .gl-logo {
             font-family: var(--font-racing);
-            font-size: 2.5rem;
+            font-size: 3rem;
             letter-spacing: -2px;
-            margin: 0;
-        }
-
-        .brand-top h2 span { color: var(--primary); }
-        .brand-line { width: 50px; height: 3px; background: var(--primary); margin-top: 10px; }
-
-        .brand-info h1 {
-            font-family: var(--font-racing);
-            font-size: 4rem;
-            line-height: 0.9;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .brand-info h1 span { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
-        .brand-info p { color: var(--text-dim); font-size: 0.95rem; max-width: 350px; line-height: 1.6; }
-
-        .auth-form-side {
-            flex: 0.9;
-            padding: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .auth-header h3 { font-family: var(--font-racing); font-size: 1.8rem; margin-bottom: 5px; }
-        .auth-header p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 40px; }
-
-        .auth-tabs {
-            display: flex;
-            background: rgba(255,255,255,0.03);
-            padding: 5px;
-            border-radius: 15px;
             margin-bottom: 40px;
         }
 
-        .tab-trigger {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: transparent;
-            color: var(--text-dim);
-            font-weight: 700;
-            font-size: 0.75rem;
-            cursor: pointer;
-            border-radius: 10px;
-            font-family: var(--font-main);
-        }
+        .gl-logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
 
-        .tab-trigger.active {
-            background: var(--primary);
-            color: #000;
-        }
-
-        .input-group { margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 25px; }
         .input-group label {
             display: block;
             font-size: 0.65rem;
@@ -132,286 +73,384 @@
             letter-spacing: 2px;
             color: var(--text-dim);
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
-        .input-wrapper { position: relative; }
-        .input-wrapper i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary); opacity: 0.6; }
-        .input-wrapper input {
+        .input-group input {
             width: 100%;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 18px 20px 18px 55px;
+            padding: 18px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #222;
             border-radius: 15px;
             color: white;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: 0.3s;
         }
 
-        .input-wrapper input:focus {
+        .input-group input:focus {
             border-color: var(--primary);
-            background: rgba(0, 255, 136, 0.05);
             outline: none;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
         }
 
         .btn-auth {
             width: 100%;
             padding: 20px;
             background: var(--primary);
+            color: #000;
             border: none;
-            border-radius: 18px;
+            border-radius: 15px;
             font-weight: 800;
-            font-family: var(--font-main);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.4s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            cursor: pointer;
-            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-3px);
             box-shadow: 0 10px 30px var(--primary-glow);
         }
 
-        /* --- DASHBOARD VIEW (Page Break Simulator) --- */
-        .dashboard-preview {
-            page-break-before: always;
-            padding: 50px;
+        /* --- DASHBOARD LAYOUT --- */
+        #main-app {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
         }
 
-        .dashboard-header {
+        aside {
+            background: #000;
+            border-right: 1px solid var(--border);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            padding: 15px 20px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.05);
+            color: var(--primary);
+        }
+
+        main {
+            padding: 50px;
+            overflow-y: auto;
+            background: #080808;
+        }
+
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .kpi-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
             padding: 30px;
-            border-radius: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
         }
 
-        .kpi-card p { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); margin-bottom: 10px; letter-spacing: 2px; }
-        .kpi-val { font-family: var(--font-racing); font-size: 2.8rem; font-weight: 700; color: var(--primary); }
-        .kpi-val span { font-size: 1rem; color: var(--text-dim); margin-left: 5px; }
-
-        .main-layout {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 40px;
+        .kpi-card h4 {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
         }
 
-        .form-panel {
-            background: linear-gradient(145deg, #0d0d0d, #050505);
-            border: 1px solid var(--border-color);
-            padding: 40px;
-            border-radius: 35px;
-            height: fit-content;
+        .kpi-card .val {
+            font-family: var(--font-racing);
+            font-size: 3rem;
+            color: var(--primary);
         }
 
-        .chart-panel {
+        .chart-container {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
             padding: 40px;
-            border-radius: 35px;
-            min-height: 500px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            height: 400px;
+            margin-bottom: 40px;
         }
 
-        .fake-chart {
-            width: 100%;
-            height: 350px;
-            border-left: 2px solid #222;
-            border-bottom: 2px solid #222;
-            position: relative;
-            margin-top: 30px;
-        }
-
-        .chart-line {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(transparent, rgba(0,255,136,0.1));
-            border-top: 3px solid var(--primary);
-            clip-path: polygon(0% 80%, 20% 50%, 40% 70%, 60% 30%, 80% 40%, 100% 10%, 100% 100%, 0% 100%);
-        }
-
+        /* --- TABLE STYLE --- */
         .history-table {
             width: 100%;
-            margin-top: 50px;
             border-collapse: collapse;
         }
 
-        .history-table th { text-align: left; font-size: 0.7rem; color: var(--text-dim); padding: 15px; border-bottom: 1px solid #111; }
-        .history-table td { padding: 20px 15px; border-bottom: 1px solid #0a0a0a; font-size: 0.85rem; }
-        .text-neon { color: var(--primary); font-weight: 700; }
+        .history-table th {
+            text-align: left;
+            padding: 15px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            border-bottom: 1px solid #222;
+        }
 
-        .footer-system {
-            margin-top: 100px;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: #222;
-            letter-spacing: 5px;
+        .history-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #111;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            background: rgba(0,255,136,0.1);
+            color: var(--primary);
+        }
+
+        /* --- STUNT & BIKE SECTION --- */
+        .bike-spec {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .spec-item {
+            background: #111;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            border: 1px solid #222;
         }
     </style>
 </head>
 <body>
 
-    <!-- PAGE 1: AUTHENTICATION INTERFACE -->
-    <div class="auth-viewport">
-        <div class="auth-master-container">
-            <div class="auth-visual-side">
-                <div class="brand-top">
-                    <h2>G-<span>LOGIC</span></h2>
-                    <div class="brand-line"></div>
-                </div>
-                <div class="brand-info">
-                    <p style="color:var(--primary); font-family:'JetBrains Mono'; font-size: 0.7rem; margin-bottom:15px;">// MEDELLÍN PERFORMANCE HUB</p>
-                    <h1>DOMINA CADA<br><span>PRIMERA RECTA</span></h1>
-                    <p>Analítica de precisión para pilotos de élite. Registra, analiza y optimiza tus tiempos en la pista de Belén.</p>
-                </div>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.2);">ESTACIÓN DE TELEMETRÍA 2026.04</div>
+    <div id="auth-section">
+        <div class="auth-card">
+            <div class="gl-logo">G-<span>LOGIC</span></div>
+            
+            <div class="input-group">
+                <label>PILOTO ID</label>
+                <input type="email" id="user-email" placeholder="julian.bmx@medellin.co">
             </div>
 
-            <div class="auth-form-side">
-                <div class="auth-header">
-                    <h3>ACCESO DE ATLETA</h3>
-                    <p>Ingresa tus credenciales para sincronizar telemetría.</p>
-                </div>
-
-                <div class="auth-tabs">
-                    <div class="tab-trigger active">LOGIN</div>
-                    <div class="tab-trigger">REGISTRO</div>
-                </div>
-
-                <div class="input-group">
-                    <label>ID ATLETA (EMAIL)</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-at"></i>
-                        <input type="email" value="julian.bmx@gatelogic.co" readonly>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>CONTRASEÑA SEGURA</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <input type="password" value="********" readonly>
-                    </div>
-                </div>
-
-                <button class="btn-auth">
-                    AUTENTICAR SISTEMA <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
-                </button>
-
-                <div style="margin-top: 50px; text-align: center; font-size: 0.6rem; color: #333; font-family: 'JetBrains Mono';">
-                    GATE-ENGINE v2.4.1 // BUILD_2026_MED
-                </div>
+            <div class="input-group">
+                <label>SISTEMA DE ACCESO</label>
+                <input type="password" id="user-pass" placeholder="••••••••">
             </div>
+
+            <button class="btn-auth" onclick="startEngine()">
+                INICIAR TELEMETRÍA <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            
+            <p style="margin-top: 30px; font-size: 0.7rem; color: #444; font-family: 'JetBrains Mono';">
+                GATE-ENGINE v2.4 // BUILD_2026
+            </p>
         </div>
     </div>
 
-    <!-- PAGE 2: DASHBOARD INTERFACE -->
-    <div class="dashboard-preview">
-        <div class="dashboard-header">
-            <div>
-                <p style="font-size: 0.7rem; color: var(--primary); font-weight: 800; letter-spacing: 3px; margin-bottom: 5px;">DASHBOARD PRINCIPAL</p>
-                <h2 style="font-family: var(--font-racing); font-size: 2.2rem; margin: 0;">SISTEMA GATELOGIC <span style="color:var(--text-dim);">PRO</span></h2>
+    <div id="main-app" class="hidden">
+        <aside>
+            <div class="gl-logo" style="font-size: 1.5rem; margin-bottom: 60px;">G-<span>L</span></div>
+            
+            <nav>
+                <a href="#" class="nav-link active" onclick="showPage('dash')"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+                <a href="#" class="nav-link" onclick="showPage('sessions')"><i class="fa-solid fa-stopwatch"></i> Sesiones</a>
+                <a href="#" class="nav-link" onclick="showPage('garage')"><i class="fa-solid fa-bicycle"></i> Garaje</a>
+            </nav>
+
+            <div style="margin-top: auto;">
+                <a href="javascript:location.reload()" class="nav-link" style="color: #ff4444;"><i class="fa-solid fa-power-off"></i> Salir</a>
             </div>
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <div style="text-align: right;">
-                    <p style="font-size: 0.8rem; font-weight: 800; margin: 0;">JULIÁN</p>
-                    <p style="font-size: 0.6rem; color: var(--primary); margin: 0;">PILOTO ÉLITE</p>
+        </aside>
+
+        <main id="content-viewport">
+            <header>
+                <div>
+                    <h2 style="font-family: var(--font-racing); font-size: 2rem;">REPORTE DE PISTA</h2>
+                    <p style="color: var(--text-dim); font-size: 0.8rem;">Medellín, Belén | Mariana Pajón Complex</p>
                 </div>
-                <div style="width: 50px; height: 50px; background: #111; border-radius: 50%; border: 2px solid var(--primary);"></div>
-            </div>
-        </div>
-
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <p>PERSONAL BEST</p>
-                <div class="kpi-val">01.125<span>s</span></div>
-            </div>
-            <div class="kpi-card">
-                <p>VELOCIDAD PICO</p>
-                <div class="kpi-val">48.2<span>km/h</span></div>
-            </div>
-            <div class="kpi-card">
-                <p>CONSISTENCIA</p>
-                <div class="kpi-val">94.8<span>%</span></div>
-            </div>
-            <div class="kpi-card">
-                <p>SESIONES (MES)</p>
-                <div class="kpi-val">12<span>hits</span></div>
-            </div>
-        </div>
-
-        <div class="main-layout">
-            <div class="form-panel">
-                <h4 style="font-family: var(--font-racing); font-size: 1.2rem; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-plus-circle" style="color:var(--primary);"></i> REGISTRO DE HIT
-                </h4>
-                <div class="input-group">
-                    <label>TIEMPO DE SALIDA (GATE)</label>
-                    <div style="background: #000; border: 1px solid #222; padding: 25px; border-radius: 20px; text-align: center; font-family: var(--font-racing); font-size: 3rem; color: var(--primary); font-weight: 700;">
-                        0.000
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="text-align: right;">
+                        <p style="font-weight: 800; font-size: 0.9rem;">JULIÁN</p>
+                        <p style="color: var(--primary); font-size: 0.6rem; letter-spacing: 2px;">PRO PILOT</p>
                     </div>
+                    <div style="width: 45px; height: 45px; background: #222; border-radius: 50%; border: 2px solid var(--primary);"></div>
                 </div>
-                <div class="input-group">
-                    <label>CONFIGURACIÓN DE BICI</label>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin: 0;">GW G1 Plus Pro 3XL / 44x16</p>
+            </header>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h4>PERSONAL BEST</h4>
+                    <div class="val">01.125<span style="font-size: 1rem; color: #444;">s</span></div>
                 </div>
-                <button class="btn-auth" style="background: white; color: black; box-shadow: none;">SINCRONIZAR DATOS</button>
+                <div class="kpi-card">
+                    <h4>VELOCIDAD TOP</h4>
+                    <div class="val">48.2<span style="font-size: 1rem; color: #444;">km/h</span></div>
+                </div>
+                <div class="kpi-card">
+                    <h4>CONSISTENCIA</h4>
+                    <div class="val">94.8<span style="font-size: 1rem; color: #444;">%</span></div>
+                </div>
             </div>
 
-            <div class="chart-panel">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="font-family: var(--font-racing); font-size: 1.2rem; text-transform: uppercase;">Progresión Temporal</h4>
-                    <div style="font-size: 0.6rem; background: #111; padding: 5px 15px; border-radius: 20px; color: var(--primary);">MÉTRICA: GATE (s)</div>
-                </div>
-                <div class="fake-chart">
-                    <div class="chart-line"></div>
-                </div>
+            <div class="chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
 
+            <div class="history-section">
+                <h3 style="font-family: var(--font-racing); margin-bottom: 25px;">ÚLTIMOS HITS</h3>
                 <table class="history-table">
                     <thead>
                         <tr>
-                            <th>FECHA</th>
+                            <th>SESIÓN</th>
                             <th>GATE TIME</th>
-                            <th>V. MAX</th>
+                            <th>V. PICO</th>
                             <th>FEELING</th>
+                            <th>ESTADO</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>28 ABR, 2026</td>
-                            <td class="text-neon">01.125s</td>
-                            <td>47.8 km/h</td>
-                            <td>Optimizado</td>
-                        </tr>
-                        <tr>
-                            <td>26 ABR, 2026</td>
-                            <td class="text-neon">01.210s</td>
-                            <td>46.2 km/h</td>
-                            <td>Fatiga</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="history-body">
+                        </tbody>
                 </table>
             </div>
-        </div>
 
-        <div class="footer-system">
-            DESIGNED & PROGRAMMED BY JOEX // MEDELLÍN PERFORMANCE SYSTEMS
-        </div>
+            <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 20px;">
+                <h4 style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 15px;">CONFIGURACIÓN DE CARRERA</h4>
+                <div class="bike-spec">
+                    <div class="spec-item">GW G1 Plus Pro 3XL</div>
+                    <div class="spec-item">Relación: 44x16</div>
+                    <div class="spec-item">Llantas: Tioga PowerBlock</div>
+                </div>
+            </div>
+        </main>
     </div>
 
+    <script>
+        /**
+         * GATE-ENGINE CORE
+         * Lógica de navegación y renderizado de datos
+         */
+
+        // 1. Inicialización de navegación
+        function startEngine() {
+            const email = document.getElementById('user-email').value;
+            const pass = document.getElementById('user-pass').value;
+
+            if(email === "" || pass === "") {
+                alert("Por favor ingrese sus credenciales de piloto.");
+                return;
+            }
+
+            // Animación de salida con GSAP
+            gsap.to(".auth-card", {
+                duration: 0.8,
+                y: -50,
+                opacity: 0,
+                ease: "power4.inOut",
+                onComplete: () => {
+                    document.getElementById('auth-section').classList.add('hidden');
+                    document.getElementById('main-app').classList.remove('hidden');
+                    initDashboard();
+                }
+            });
+        }
+
+        // 2. Motor de Gráficas (Chart.js)
+        function initDashboard() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            // Datos simulados de progresión
+            const sessionData = [1.250, 1.210, 1.180, 1.195, 1.125, 1.140, 1.125];
+            const labels = ['Hit 1', 'Hit 2', 'Hit 3', 'Hit 4', 'Hit 5', 'Hit 6', 'PB'];
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tiempo de Gate (s)',
+                        data: sessionData,
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.05)',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#00ff88',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#666' }
+                        }
+                    }
+                }
+            });
+
+            populateHistory();
+        }
+
+        // 3. Generador de Historial
+        function populateHistory() {
+            const historyData = [
+                { id: "S-204", gate: "01.125s", speed: "48.2 km/h", feeling: "Optimizado" },
+                { id: "S-203", gate: "01.140s", speed: "47.5 km/h", feeling: "Fatiga" },
+                { id: "S-202", gate: "01.195s", speed: "46.8 km/h", feeling: "Calentamiento" },
+                { id: "S-201", gate: "01.210s", speed: "47.0 km/h", feeling: "Recuperación" }
+            ];
+
+            const tbody = document.getElementById('history-body');
+            tbody.innerHTML = historyData.map(item => `
+                <tr>
+                    <td style="font-family: 'JetBrains Mono'; font-size: 0.7rem;">${item.id}</td>
+                    <td style="font-weight: 800; color: #00ff88;">${item.gate}</td>
+                    <td>${item.speed}</td>
+                    <td><span class="badge">${item.feeling}</span></td>
+                    <td><i class="fa-solid fa-circle-check" style="color: #00ff88; font-size: 0.8rem;"></i></td>
+                </tr>
+            `).join('');
+        }
+
+        // 4. Router Simple
+        function showPage(page) {
+            console.log("Navegando a: " + page);
+            // Aquí puedes expandir para mostrar diferentes contenedores
+        }
+
+        // Animación inicial de entrada
+        gsap.from(".auth-card", { duration: 1.5, opacity: 0, y: 100, ease: "expo.out" });
+    </script>
 </body>
 </html>
