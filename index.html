@@ -1,58 +1,322 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark-theme">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMX Performance Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GateLogic Pro | Elite BMX Performance & Telemetry System</title>
+    
+    <meta name="author" content="Julián - Web Designer & Programmer">
+    <meta name="description" content="Plataforma profesional de análisis de datos para corredores de BMX Racing y Bicicross.">
+    <meta name="theme-color" content="#050505">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;800&family=Rajdhani:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body>
 
-    <div id="login-screen" class="overlay">
-        <div class="auth-box">
-            <h2>BMX Tech Login</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Contraseña">
-            <button onclick="login()">Entrar</button>
-            <button onclick="register()" class="secondary">Registrarse</button>
+    <div id="app-preloader">
+        <div class="loader-wrapper">
+            <div class="gl-glitch-logo" data-text="GATELOGIC">GATELOGIC</div>
+            <div class="loader-bar-container">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <p class="loader-status">Iniciando sistemas de telemetría...</p>
         </div>
     </div>
 
-    <main id="dashboard" class="hidden">
-        <nav>
-            <h1>BMX <span>DATA</span></h1>
-            <button onclick="logout()">Cerrar Sesión</button>
-        </nav>
+    <div id="toast-container" class="toast-stack"></div>
 
-        <section class="top-stats">
-            <div class="card form-card">
-                <h3>Registrar Entrenamiento</h3>
-                <form id="data-form">
-                    <input type="number" id="gate-time" step="0.01" placeholder="Tiempo Gate (s)" required>
-                    <input type="number" id="top-speed" placeholder="Velocidad Máx (km/h)" required>
-                    <select id="feeling">
-                        <option value="Excelente">Excelente</option>
-                        <option value="Normal">Normal</option>
-                        <option value="Cansado">Cansado</option>
-                    </select>
-                    <button type="submit">Subir Datos</button>
-                </form>
+    <section id="login-screen" class="auth-viewport">
+        <div class="auth-split-layout">
+            <div class="auth-visual-side">
+                <div class="overlay-gradient"></div>
+                <div class="visual-content">
+                    <div class="badge-new">NUEVA VERSIÓN 2.0</div>
+                    <h1 class="reveal-text">EL PODER DE LOS<span> MILISEGUNDOS</span></h1>
+                    <p>Optimiza tu salida, analiza tu potencia y domina la pista de Medellín.</p>
+                </div>
+                <div class="visual-footer">
+                    <div class="pista-status">
+                        <span class="dot pulse"></span> Pista Belén: Abierta
+                    </div>
+                </div>
             </div>
 
-            <div class="card stat-highlight">
-                <h3>Último Mejor Tiempo</h3>
-                <p id="best-time">0.00s</p>
-            </div>
-        </section>
+            <div class="auth-form-side">
+                <div class="auth-header">
+                    <div class="gl-icon">G</div>
+                    <h2>Acceso Atletas</h2>
+                    <p>Introduce tus credenciales GateLogic Pro.</p>
+                </div>
 
-        <section class="charts">
-            <div class="card chart-card">
-                <canvas id="performanceChart"></canvas>
+                <div class="auth-tabs">
+                    <button class="tab-trigger active" data-target="login-box">LOGIN</button>
+                    <button class="tab-trigger" data-target="register-box">REGISTRO</button>
+                </div>
+
+                <div class="auth-forms-container">
+                    <div id="login-box" class="auth-card-form">
+                        <div class="input-wrapper-pro">
+                            <label>ID ATLETA (EMAIL)</label>
+                            <div class="input-inner">
+                                <i class="fa-solid fa-at"></i>
+                                <input type="email" id="email" placeholder="usuario@gatelogic.com" required>
+                            </div>
+                        </div>
+                        <div class="input-wrapper-pro">
+                            <label>CONTRASEÑA SEGURA</label>
+                            <div class="input-inner">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <input type="password" id="password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <button onclick="login()" class="btn-gl-primary">
+                            <span>AUTENTICAR SISTEMA</span>
+                            <i class="fa-solid fa-arrow-right-long"></i>
+                        </button>
+                    </div>
+
+                    <div id="register-box" class="auth-card-form hidden">
+                        <div class="input-wrapper-pro">
+                            <label>NOMBRE COMPLETO</label>
+                            <input type="text" id="reg-name" placeholder="Ej: Julián BMX">
+                        </div>
+                        <div class="input-wrapper-pro">
+                            <label>CATEGORÍA</label>
+                            <select id="reg-cat">
+                                <option>Principiante</option>
+                                <option>Experto</option>
+                                <option>Élite / Pro</option>
+                            </select>
+                        </div>
+                        <button onclick="register()" class="btn-gl-secondary">CREAR PERFIL DE PILOTO</button>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
+
+    <main id="dashboard" class="app-shell hidden">
+        
+        <aside class="app-sidebar">
+            <div class="sidebar-top">
+                <div class="mini-logo">G<span>L</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" title="Dashboard">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    <span class="nav-label">Inicio</span>
+                </a>
+                <a href="#" class="nav-item" title="Sesiones">
+                    <i class="fa-solid fa-stopwatch-20"></i>
+                    <span class="nav-label">Sesiones</span>
+                </a>
+                <a href="#" class="nav-item" title="Telemetría">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span class="nav-label">Telemetría</span>
+                </a>
+                <a href="#" class="nav-item" title="Configuración Bici">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span class="nav-label">Taller</span>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <button onclick="logout()" class="btn-logout-icon">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <div class="app-content-viewport">
+            
+            <header class="content-header">
+                <div class="header-breadcrumb">
+                    <span class="root">GateLogic</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="current">Dashboard Principal</span>
+                </div>
+                <div class="header-actions">
+                    <div class="status-chip">
+                        <i class="fa-solid fa-wifi"></i> Online
+                    </div>
+                    <div class="user-profile-trigger">
+                        <div class="user-text">
+                            <span class="u-name">Julián</span>
+                            <span class="u-rank">Piloto Elite</span>
+                        </div>
+                        <img src="https://i.pravatar.cc/150?u=julian" alt="Avatar" class="u-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                
+                <section class="grid-col-left">
+                    
+                    <div class="glass-module-card entry-module">
+                        <div class="module-header">
+                            <div class="icon-box"><i class="fa-solid fa-plus"></i></div>
+                            <div class="text-box">
+                                <h3>Nueva Telemetría</h3>
+                                <p>Registra los datos de tu último hit.</p>
+                            </div>
+                        </div>
+                        
+                        <form id="data-form" class="pro-grid-form">
+                            <div class="form-group-full">
+                                <label>TIEMPO REACCIÓN GATE (s)</label>
+                                <input type="number" id="gate-time" step="0.001" placeholder="0.000" class="main-input">
+                            </div>
+                            
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label>VELOCIDAD MÁX</label>
+                                    <input type="number" id="top-speed" placeholder="km/h">
+                                </div>
+                                <div class="form-group">
+                                    <label>CADENCIA MÁX</label>
+                                    <input type="number" placeholder="RPM">
+                                </div>
+                            </div>
+
+                            <div class="form-group-full">
+                                <label>CONFIGURACIÓN DE BICI (RELACIÓN)</label>
+                                <div class="gear-custom-select">
+                                    <input type="number" placeholder="Plato" value="44">
+                                    <span>/</span>
+                                    <input type="number" placeholder="Piñón" value="16">
+                                </div>
+                            </div>
+
+                            <div class="form-group-full">
+                                <label>ESTADO FÍSICO / FATIGA</label>
+                                <div class="custom-range">
+                                    <input type="range" id="feeling-range" min="1" max="10" value="8">
+                                    <div class="range-labels">
+                                        <span>Agotado</span>
+                                        <span>Óptimo</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-submit-data">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                SINCRONIZAR CON GATE-CLOUD
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="glass-module-card bike-module">
+                        <h3>ESTADO DEL SETUP</h3>
+                        <div class="bike-status-list">
+                            <div class="status-item">
+                                <span class="label">Cadena Izumi</span>
+                                <div class="progress-mini"><div class="fill" style="width: 85%;"></div></div>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">Relación actual</span>
+                                <span class="value-highlight">44x16</span>
+                            </div>
+                        </div>
+                        <button class="btn-text-only">VER TALLER COMPLETO</button>
+                    </div>
+                </section>
+
+                <section class="grid-col-right">
+                    
+                    <div class="kpi-row">
+                        <div class="kpi-card">
+                            <span class="kpi-label">PERSONAL BEST</span>
+                            <div class="kpi-value-group">
+                                <span id="best-time">--.---</span>
+                                <small>s</small>
+                            </div>
+                            <div class="kpi-trend up">
+                                <i class="fa-solid fa-arrow-trend-down"></i> -0.05s
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <span class="kpi-label">VELOCIDAD TOP</span>
+                            <div class="kpi-value-group">
+                                <span id="max-speed-display">0</span>
+                                <small>km/h</small>
+                            </div>
+                            <div class="kpi-trend">PROMEDIO ESTABLE</div>
+                        </div>
+                        <div class="kpi-card highlight">
+                            <span class="kpi-label">CONSISTENCIA</span>
+                            <div class="kpi-value-group">
+                                <span>98.2</span>
+                                <small>%</small>
+                            </div>
+                            <div class="kpi-trend positive">ZONA ÉLITE</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-module-card chart-module">
+                        <div class="chart-header-pro">
+                            <div class="c-title">
+                                <h3>Progresión Temporal</h3>
+                                <p>Análisis de milisegundos en los últimos 20 saltos</p>
+                            </div>
+                            <div class="c-filters">
+                                <button class="btn-c active">Gate</button>
+                                <button class="btn-c">Velocidad</button>
+                            </div>
+                        </div>
+                        <div class="main-canvas-area">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-module-card table-module">
+                        <div class="table-header">
+                            <h3>Registros Recientes</h3>
+                            <button class="btn-export"><i class="fa-solid fa-file-export"></i> CSV</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="gl-table">
+                                <thead>
+                                    <tr>
+                                        <th>SESIÓN</th>
+                                        <th>TIEMPO GATE</th>
+                                        <th>V. PICO</th>
+                                        <th>FEELING</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-body">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
+
+    <div id="modal-settings" class="modal-overlay hidden">
+        <div class="modal-container glass-card">
+            <header>
+                <h2>Ajustes de Telemetría</h2>
+                <button class="close-modal">&times;</button>
+            </header>
+            <div class="modal-body">
+                </div>
+        </div>
+    </div>
+
+    <footer class="app-footer-status">
+        <div class="f-left">GateLogic Engine v2.0 // Build 2026</div>
+        <div class="f-right">Latencia de servidor: 9ms // Medellín Hub</div>
+    </footer>
 
     <script type="module" src="app.js"></script>
 </body>
