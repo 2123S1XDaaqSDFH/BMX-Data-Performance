@@ -1,113 +1,389 @@
+/* =========================================================
+   1. VARIABLES & CORE SETUP
+   ========================================================= */
 :root {
-    --primary: #00ff88;
-    --accent: #00e5ff;
-    --bg: #050505;
-    --card-bg: rgba(25, 25, 25, 0.8);
-    --text: #ffffff;
+    /* Paleta Racing Pro */
+    --neon-green: #00ff88;
+    --neon-blue: #00e5ff;
+    --neon-red: #ff3e3e;
+    --bg-dark: #050505;
+    --card-glass: rgba(20, 20, 20, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
+    --text-dim: #a0a0a0;
+    
+    /* Efectos */
+    --shadow-neon: 0 0 15px rgba(0, 255, 136, 0.3);
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    margin: 0;
-    background: radial-gradient(circle at top right, #111, #050505);
-    color: var(--text);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
+    line-height: 1.6;
     overflow-x: hidden;
 }
 
-/* Pantalla de Login Mejorada */
-.overlay {
+h1, h2, h3, .gl-logo, .kpi-label {
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   2. ANIMATED PRELOADER
+   ========================================================= */
+#app-preloader {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
+    background: var(--bg-dark);
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
 }
 
-.auth-box {
-    background: var(--card-bg);
-    padding: 40px;
-    border-radius: 24px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
+.gl-glitch-logo {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    position: relative;
+    letter-spacing: 5px;
+}
+
+.loader-bar-container {
+    width: 200px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.loader-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--neon-green);
+    box-shadow: var(--shadow-neon);
+}
+
+/* =========================================================
+   3. AUTHENTICATION UI (SPLIT LAYOUT)
+   ========================================================= */
+.auth-viewport {
+    height: 100vh;
+    display: flex;
+}
+
+.auth-split-layout {
+    display: flex;
     width: 100%;
-    max-width: 380px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.auth-box h2 { 
-    margin-bottom: 30px; 
+.auth-visual-side {
+    flex: 1.2;
+    background: url('https://images.unsplash.com/photo-1583141151610-8b093375862d?q=80&w=2070') center/cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+}
+
+@media (max-width: 900px) {
+    .auth-visual-side { display: none; }
+}
+
+.overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
+}
+
+.visual-content {
+    position: relative;
+    z-index: 2;
+}
+
+.visual-content h1 {
+    font-size: 4.5rem;
+    line-height: 0.9;
+    font-weight: 800;
+}
+
+.visual-content h1 span {
+    color: var(--neon-green);
+    text-shadow: var(--shadow-neon);
+}
+
+.auth-form-side {
+    flex: 0.8;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+    border-left: 1px solid var(--border-glass);
+}
+
+.input-wrapper-pro {
+    margin-bottom: 25px;
+}
+
+.input-wrapper-pro label {
+    display: block;
+    font-size: 0.7rem;
     letter-spacing: 2px;
-    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
 }
 
-/* Dashboard Estilo Pro */
-#dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
+.input-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-inner i {
+    position: absolute;
+    left: 15px;
+    color: var(--neon-green);
+}
+
+.input-inner input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid #222;
+    padding: 15px 15px 15px 45px;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.input-inner input:focus {
+    border-color: var(--neon-green);
+    outline: none;
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.btn-gl-primary {
+    width: 100%;
     padding: 20px;
-}
-
-nav {
+    background: var(--neon-green);
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 0;
-}
-
-nav h1 { font-style: italic; font-weight: 900; }
-nav span { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-
-.top-stats {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 30px;
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: transform 0.3s ease;
-}
-
-.card:hover { transform: translateY(-5px); border-color: var(--primary); }
-
-input, select {
-    background: #111;
-    border: 1px solid #333;
-    color: white;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-button {
-    background: var(--primary);
-    color: #000;
-    font-weight: 900;
-    text-transform: uppercase;
-    padding: 18px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: none;
     transition: 0.3s;
 }
 
-button:hover { background: var(--accent); box-shadow: 0 0 20px var(--accent); }
-
-#best-time {
-    font-size: 5rem;
-    color: var(--primary);
-    margin: 10px 0;
-    font-weight: 900;
-    text-shadow: 0 0 30px rgba(0,255,136,0.3);
+.btn-gl-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    transform: translateY(-2px);
 }
 
+/* =========================================================
+   4. DASHBOARD SHELL (SIDEBAR & LAYOUT)
+   ========================================================= */
+.app-shell {
+    display: flex;
+    height: 100vh;
+}
+
+.app-sidebar {
+    width: 80px;
+    background: #000;
+    border-right: 1px solid var(--border-glass);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 0;
+    transition: 0.3s ease;
+}
+
+.app-sidebar:hover {
+    width: 200px;
+}
+
+.nav-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    text-decoration: none;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    transition: 0.2s;
+    overflow: hidden;
+    position: relative;
+}
+
+.nav-label {
+    position: absolute;
+    left: 60px;
+    opacity: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.app-sidebar:hover .nav-label {
+    opacity: 1;
+}
+
+.nav-item.active, .nav-item:hover {
+    background: var(--neon-green);
+    color: #000;
+}
+
+/* =========================================================
+   5. CONTENT GRID & MODULES
+   ========================================================= */
+.app-content-viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px 50px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 30px;
+}
+
+.glass-module-card {
+    background: var(--card-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-glass);
+    border-radius: 24px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* KPI CARDS */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: linear-gradient(145deg, #111, #080808);
+    border: 1px solid #1a1a1a;
+    padding: 25px;
+    border-radius: 20px;
+}
+
+.kpi-card.highlight {
+    border-color: var(--neon-green);
+    background: linear-gradient(145deg, #0a110a, #050505);
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+}
+
+.kpi-value-group {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.kpi-value-group small {
+    font-size: 1rem;
+    color: var(--text-dim);
+}
+
+/* =========================================================
+   6. TABLES & DATA VISUALS
+   ========================================================= */
+.gl-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.gl-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 15px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.gl-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid #111;
+    font-weight: 500;
+}
+
+.gl-table tr:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+/* =========================================================
+   7. CUSTOM INPUTS & RANGE
+   ========================================================= */
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--neon-green);
+    margin: 15px 0;
+}
+
+.btn-submit-data {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.btn-submit-data:hover {
+    background: var(--neon-green);
+    color: #000;
+}
+
+/* =========================================================
+   8. UTILITIES
+   ========================================================= */
 .hidden { display: none !important; }
+
+.status-optimal {
+    color: var(--neon-green);
+    font-weight: 800;
+    font-size: 0.8rem;
+}
+
+/* Scrollbar Style */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
