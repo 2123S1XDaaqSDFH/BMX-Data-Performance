@@ -1,224 +1,228 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GateLogic PRO</title>
 
+<!-- ========================= -->
 <!-- FONTS -->
+<!-- ========================= -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-
-<!-- ICONOS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- CHART -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-/* ============================= */
-/* GLOBAL */
-/* ============================= */
-
-:root {
-    --primary: #00ff88;
-    --bg: #050505;
-    --card: #111;
-    --border: #222;
-    --text: #fff;
-    --dim: #777;
+/* ========================= */
+/* RESET */
+/* ========================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ========================= */
+/* ROOT */
+/* ========================= */
+:root{
+    --primary:#00ff88;
+    --bg:#050505;
+    --card:rgba(20,20,20,0.9);
+    --border:#222;
+    --text:#fff;
+    --dim:#888;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    overflow: hidden;
+/* ========================= */
+/* BODY */
+/* ========================= */
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow:hidden;
 }
 
-/* ============================= */
+/* ========================= */
 /* LOADER */
-/* ============================= */
-
-#loader {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    flex-direction: column;
+/* ========================= */
+#loader{
+    position:fixed;
+    inset:0;
+    background:black;
+    z-index:9999;
 }
 
-.loader-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 3rem;
-    color: white;
-    letter-spacing: 3px;
+#loader video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-.loader-bar {
-    width: 200px;
-    height: 3px;
-    background: #222;
-    margin-top: 20px;
-    overflow: hidden;
+.fade-out{
+    opacity:0;
+    transition:opacity 0.8s ease;
 }
 
-.loader-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--primary);
+/* ========================= */
+/* BACKGROUND EFFECT */
+/* ========================= */
+.bg-glow{
+    position:absolute;
+    width:600px;
+    height:600px;
+    background:radial-gradient(circle,var(--primary),transparent);
+    filter:blur(120px);
+    top:-200px;
+    left:-200px;
+    opacity:0.2;
 }
 
-/* ============================= */
-/* VIEWS */
-/* ============================= */
-
-.view {
-    display: none;
-    height: 100vh;
+/* ========================= */
+/* AUTH WRAPPER */
+/* ========================= */
+#auth{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition:opacity 1s ease;
 }
 
-.active {
-    display: flex;
+#auth.active{
+    opacity:1;
 }
 
-.hidden {
-    display: none !important;
+/* ========================= */
+/* CARD */
+/* ========================= */
+.auth-box{
+    width:420px;
+    background:var(--card);
+    backdrop-filter:blur(25px);
+    border:1px solid var(--border);
+    padding:40px;
+    border-radius:25px;
+    position:relative;
 }
 
-/* ============================= */
-/* AUTH */
-/* ============================= */
-
-#auth-view {
-    justify-content: center;
-    align-items: center;
+/* ========================= */
+/* LOGO */
+/* ========================= */
+.logo{
+    font-family:'Rajdhani',sans-serif;
+    font-size:2.8rem;
+    text-align:center;
+    margin-bottom:30px;
 }
 
-.auth-box {
-    width: 400px;
-    background: #111;
-    padding: 40px;
-    border-radius: 20px;
+.logo span{
+    color:var(--primary);
 }
 
-.auth-box h1 {
-    text-align: center;
-    margin-bottom: 20px;
+/* ========================= */
+/* INPUTS */
+/* ========================= */
+.input-group{
+    margin-bottom:15px;
 }
 
-.auth-box input, .auth-box select {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 15px;
-    background: #000;
-    border: 1px solid #222;
-    color: white;
+.input-group label{
+    font-size:0.7rem;
+    color:var(--dim);
+    margin-bottom:5px;
+    display:block;
 }
 
-.auth-box button {
-    width: 100%;
-    padding: 15px;
-    background: var(--primary);
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
+.input-group input,
+.input-group select{
+    width:100%;
+    padding:14px;
+    background:#000;
+    border:1px solid #222;
+    color:white;
+    border-radius:10px;
 }
 
-/* ============================= */
-/* APP */
-/* ============================= */
-
-#app-view {
-    display: flex;
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    background:var(--primary);
+    color:black;
+    font-weight:800;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
 }
 
-/* SIDEBAR */
-.sidebar {
-    width: 220px;
-    background: #000;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+button:hover{
+    transform:translateY(-2px);
 }
 
-.sidebar button {
-    margin-bottom: 10px;
-    padding: 12px;
-    background: none;
-    border: none;
-    color: var(--dim);
-    text-align: left;
-    cursor: pointer;
+/* ========================= */
+/* SWITCH */
+/* ========================= */
+.switch{
+    text-align:center;
+    margin-top:15px;
+    font-size:0.8rem;
+    color:var(--dim);
+    cursor:pointer;
 }
 
-.sidebar button:hover {
-    color: var(--primary);
+/* ========================= */
+/* HIDDEN */
+/* ========================= */
+.hidden{
+    display:none;
 }
 
-/* MAIN */
-.main {
-    flex: 1;
-    padding: 30px;
-    overflow-y: auto;
+/* ========================= */
+/* ANIM */
+/* ========================= */
+.slide-up{
+    transform:translateY(40px);
+    opacity:0;
+    transition:all 0.6s ease;
 }
 
-/* ============================= */
-/* PAGES */
-/* ============================= */
-
-.page {
-    display: none;
+.slide-up.active{
+    transform:translateY(0);
+    opacity:1;
 }
 
-.page.active {
-    display: block;
+/* ========================= */
+/* ERROR */
+/* ========================= */
+.error{
+    color:#ff4444;
+    font-size:0.7rem;
+    margin-top:5px;
 }
 
-/* ============================= */
-/* CARDS */
-/* ============================= */
-
-.card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 20px;
+/* ========================= */
+/* SUCCESS */
+/* ========================= */
+.success{
+    color:#00ff88;
+    font-size:0.7rem;
 }
 
-/* ============================= */
-/* PROFILE */
-/* ============================= */
-
-.profile-img {
-    width: 100px;
-    height: 100px;
-    background: #222;
-    border-radius: 50%;
-    margin-bottom: 10px;
-}
-
-/* ============================= */
-/* TABLE */
-/* ============================= */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-td, th {
-    padding: 10px;
-    border-bottom: 1px solid #222;
+/* ========================= */
+/* EXTRA UI */
+/* ========================= */
+.footer{
+    margin-top:20px;
+    text-align:center;
+    font-size:0.6rem;
+    color:#444;
 }
 
 </style>
@@ -226,142 +230,172 @@ td, th {
 
 <body>
 
-<!-- ============================= -->
+<!-- ========================= -->
 <!-- LOADER -->
-<!-- ============================= -->
+<!-- ========================= -->
 <div id="loader">
-    <video id="loaderVideo" autoplay muted playsinline>
+    <video id="loaderVideo" muted playsinline>
         <source src="loader.mp4" type="video/mp4">
     </video>
 </div>
 
-<!-- ============================= -->
+<!-- ========================= -->
 <!-- AUTH -->
-<!-- ============================= -->
-<div id="auth-view" class="view active">
-    <div class="auth-box">
-        <h1>Registro</h1>
+<!-- ========================= -->
+<div id="auth">
 
-        <input placeholder="Nombre">
-        <input placeholder="Username">
-        <input placeholder="Peso">
-        <select>
-            <option>Elite</option>
-        </select>
-        <input placeholder="Email">
-        <input placeholder="Password">
+<div class="bg-glow"></div>
 
-        <button onclick="enterApp()">Entrar</button>
-    </div>
+<div class="auth-box slide-up" id="authBox">
+
+<div class="logo">G-<span>LOGIC</span></div>
+
+<!-- LOGIN -->
+<div id="loginForm">
+
+<div class="input-group">
+<label>Email</label>
+<input id="loginEmail">
 </div>
 
-<!-- ============================= -->
-<!-- APP -->
-<!-- ============================= -->
-<div id="app-view" class="view">
+<div class="input-group">
+<label>Password</label>
+<input type="password" id="loginPass">
+</div>
 
-    <div class="sidebar">
-        <button onclick="go('dashboard')">Dashboard</button>
-        <button onclick="go('profile')">Perfil</button>
-        <button onclick="go('garage')">Garage</button>
-        <button onclick="go('rivals')">Rivales</button>
-        <button onclick="go('leaderboard')">Ranking</button>
-    </div>
+<button onclick="login()">INICIAR SESIÓN</button>
 
-    <div class="main">
+<div class="switch" onclick="showRegister()">Crear cuenta</div>
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="page active">
-            <h2>Dashboard</h2>
-            <canvas id="chart"></canvas>
-        </div>
+</div>
 
-        <!-- PROFILE -->
-        <div id="profile" class="page">
-            <h2>Perfil</h2>
-            <div class="profile-img"></div>
-            <input type="file">
-        </div>
+<!-- REGISTER -->
+<div id="registerForm" class="hidden">
 
-        <!-- GARAGE -->
-        <div id="garage" class="page">
-            <h2>Garage</h2>
-            <button>Añadir Bike</button>
-        </div>
+<div class="input-group">
+<label>Nombre</label>
+<input id="name">
+</div>
 
-        <!-- RIVALS -->
-        <div id="rivals" class="page">
-            <h2>Rivales</h2>
-            <input placeholder="UID rival">
-            <button>Agregar</button>
-        </div>
+<div class="input-group">
+<label>Username</label>
+<input id="username">
+</div>
 
-        <!-- LEADERBOARD -->
-        <div id="leaderboard" class="page">
-            <h2>Ranking</h2>
-            <table>
-                <tr><th>Nombre</th><th>Tiempo</th></tr>
-                <tr><td>Juan</td><td>1.12</td></tr>
-            </table>
-        </div>
+<div class="input-group">
+<label>Peso</label>
+<input id="peso">
+</div>
 
-    </div>
+<div class="input-group">
+<label>Categoría</label>
+<select id="categoria">
+<option>Junior</option>
+<option>Elite</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input id="email">
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password" id="password">
+</div>
+
+<button onclick="register()">REGISTRAR</button>
+
+<div class="switch" onclick="showLogin()">Ya tengo cuenta</div>
+
+</div>
+
+<div id="msg"></div>
+
+<div class="footer">GateLogic v3.0</div>
+
+</div>
 
 </div>
 
 <script>
 
-/* ============================= */
-/* LOADER ANIMATION */
-/* ============================= */
+/* ========================= */
+/* LOADER */
+/* ========================= */
+const video=document.getElementById("loaderVideo");
+const loader=document.getElementById("loader");
+const auth=document.getElementById("auth");
+const box=document.getElementById("authBox");
 
-let progress = 0;
-const fill = document.getElementById("loaderFill");
+video.oncanplaythrough=()=>video.play();
 
-const interval = setInterval(() => {
-    progress += 5;
-    fill.style.width = progress + "%";
+video.onended=()=>{
+    loader.classList.add("fade-out");
 
-    if(progress >= 100){
-        clearInterval(interval);
-        document.getElementById("loader").style.display = "none";
-    }
-}, 50);
+    setTimeout(()=>{
+        loader.style.display="none";
+        auth.classList.add("active");
 
-/* ============================= */
-/* NAVIGATION */
-/* ============================= */
+        setTimeout(()=>{
+            box.classList.add("active");
+        },100);
 
-function go(page){
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(page).classList.add('active');
+    },800);
+};
+
+/* ========================= */
+/* SWITCH */
+/* ========================= */
+function showRegister(){
+    loginForm.classList.add("hidden");
+    registerForm.classList.remove("hidden");
 }
 
-/* ============================= */
-/* ENTER APP */
-/* ============================= */
-
-function enterApp(){
-    document.getElementById("auth-view").classList.remove("active");
-    document.getElementById("app-view").classList.add("active");
+function showLogin(){
+    registerForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
 }
 
-/* ============================= */
-/* CHART */
-/* ============================= */
+/* ========================= */
+/* VALIDATION */
+/* ========================= */
+function showMsg(text,type){
+    const msg=document.getElementById("msg");
+    msg.className=type;
+    msg.innerText=text;
+}
 
-const ctx = document.getElementById('chart');
+/* ========================= */
+/* LOGIN */
+/* ========================= */
+function login(){
+    const email=document.getElementById("loginEmail").value;
+    const pass=document.getElementById("loginPass").value;
 
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['1','2','3','4'],
-        datasets: [{
-            data: [1.2,1.1,1.15,1.12],
-            borderColor: '#00ff88'
-        }]
+    if(!email || !pass){
+        showMsg("Completa los campos","error");
+        return;
     }
-});
+
+    showMsg("Acceso correcto (simulado)","success");
+}
+
+/* ========================= */
+/* REGISTER */
+/* ========================= */
+function register(){
+    const name=document.getElementById("name").value;
+    const email=document.getElementById("email").value;
+
+    if(!name || !email){
+        showMsg("Faltan datos","error");
+        return;
+    }
+
+    showMsg("Registro exitoso (simulado)","success");
+}
 
 </script>
 
