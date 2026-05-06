@@ -12,7 +12,7 @@ getStorage,ref,uploadBytes,getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
-apiKey:"TU_API_KEY",
+apiKey:"AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
 authDomain:"gatelogic.firebaseapp.com",
 projectId:"gatelogic",
 storageBucket:"gatelogic.firebasestorage.app",
