@@ -1,53 +1,23 @@
-/**
- * GATELOGIC PRO - CORE ENGINE v4.0 (PRO CLEAN)
- */
-
-// ===============================
-// 1. FIREBASE IMPORTS
-// ===============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut,
-    updateProfile
+getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,updateProfile
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
-    getFirestore,
-    collection,
-    addDoc,
-    query,
-    where,
-    orderBy,
-    onSnapshot,
-    limit,
-    doc,
-    setDoc,
-    getDoc,
-    getDocs
+getFirestore,collection,addDoc,query,where,orderBy,onSnapshot,limit,doc,setDoc,getDoc,getDocs
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import {
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL
+getStorage,ref,uploadBytes,getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// ===============================
-// 2. CONFIG
-// ===============================
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "gatelogic.firebaseapp.com",
-    projectId: "gatelogic",
-    storageBucket: "gatelogic.firebasestorage.app",
-    messagingSenderId: "951205968408",
-    appId: "1:951205968408:web:004e0542540ea86318216d"
+apiKey:"TU_API_KEY",
+authDomain:"gatelogic.firebaseapp.com",
+projectId:"gatelogic",
+storageBucket:"gatelogic.firebasestorage.app",
+messagingSenderId:"951205968408",
+appId:"1:951205968408:web:004e0542540ea86318216d"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -56,298 +26,171 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 let mainChart;
-let currentUserData = null;
+let currentUserData=null;
 
-// ===============================
-// 3. AUTH
-// ===============================
-window.login = async () => {
-    try {
-        await signInWithEmailAndPassword(
-            auth,
-            loginEmail.value,
-            loginPass.value
-        );
-        showToast("Bienvenido 🚀", "success");
-    } catch (e) {
-        showToast(e.message, "error");
-    }
+// LOGIN
+window.login=async()=>{
+await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);
 };
 
-window.register = async () => {
-    try {
-        const cred = await createUserWithEmailAndPassword(
-            auth,
-            email.value,
-            password.value
-        );
+// REGISTER
+window.register=async()=>{
+const cred=await createUserWithEmailAndPassword(auth,email.value,password.value);
 
-        const userData = {
-            name: name.value,
-            username: username.value,
-            peso: parseFloat(peso.value),
-            categoria: categoria.value,
-            pais: "Colombia",
-            bestTime: 999,
-            photoURL: "",
-            createdAt: new Date()
-        };
-
-        await setDoc(doc(db, "users", cred.user.uid), userData);
-
-        await updateProfile(cred.user, {
-            displayName: userData.name
-        });
-
-        showToast("Cuenta creada 🔥", "success");
-
-    } catch (e) {
-        showToast(e.message, "error");
-    }
-};
-
-window.logout = () => signOut(auth);
-
-// ===============================
-// 4. SESSION
-// ===============================
-onAuthStateChanged(auth, async (user) => {
-
-    if (user) {
-        loginScreen.classList.add("hidden");
-        dashboard.classList.remove("hidden");
-
-        await loadUser(user.uid);
-        initDataEngine(user.uid);
-        loadFeed();
-        loadRanking();
-
-    } else {
-        loginScreen.classList.remove("hidden");
-        dashboard.classList.add("hidden");
-    }
+await setDoc(doc(db,"users",cred.user.uid),{
+name:name.value,
+username:username.value,
+peso:parseFloat(peso.value),
+categoria:categoria.value,
+pais:"Colombia",
+bestTime:999,
+photoURL:""
 });
 
-// ===============================
-// 5. USER PROFILE
-// ===============================
-async function loadUser(uid){
-
-    const snap = await getDoc(doc(db,"users",uid));
-
-    if(!snap.exists()) return;
-
-    currentUserData = snap.data();
-
-    document.getElementById("user-name").innerText = currentUserData.name;
-
-    // Cargar rivales automáticamente
-    const rivals = await findRivals(currentUserData);
-    renderRivals(rivals);
-}
-
-// ===============================
-// 6. FOTO DE PERFIL
-// ===============================
-window.uploadProfilePhoto = async (file) => {
-
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const storageRef = ref(storage, `profiles/${user.uid}`);
-
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-
-    await setDoc(doc(db,"users",user.uid), {
-        photoURL: url
-    }, { merge: true });
-
-    showToast("Foto actualizada 🔥","success");
+await updateProfile(cred.user,{displayName:name.value});
 };
 
-// ===============================
-// 7. DATA ENGINE
-// ===============================
+// SESSION
+onAuthStateChanged(auth,async(user)=>{
+if(user){
+
+gsap.to("#login-screen",{opacity:0,duration:0.4,onComplete:()=>{
+loginScreen.classList.add("hidden");
+dashboard.classList.remove("hidden");
+
+gsap.from("#dashboard",{opacity:0,duration:0.6});
+
+loadUser(user.uid);
+initDataEngine(user.uid);
+loadFeed();
+loadRanking();
+loadDuels();
+}});
+
+}else{
+loginScreen.classList.remove("hidden");
+dashboard.classList.add("hidden");
+}
+});
+
+// USER
+async function loadUser(uid){
+const snap=await getDoc(doc(db,"users",uid));
+currentUserData=snap.data();
+userName.innerText=currentUserData.name;
+
+const rivals=await findRivals(currentUserData);
+renderRivals(rivals);
+}
+
+// FOTO
+window.uploadProfilePhoto=async(file)=>{
+const user=auth.currentUser;
+const storageRef=ref(storage,`profiles/${user.uid}`);
+await uploadBytes(storageRef,file);
+const url=await getDownloadURL(storageRef);
+await setDoc(doc(db,"users",user.uid),{photoURL:url},{merge:true});
+};
+
+// DATA
 function initDataEngine(uid){
 
-    const q = query(
-        collection(db,"entrenamientos"),
-        where("uid","==",uid),
-        orderBy("fecha","desc"),
-        limit(20)
-    );
+const q=query(collection(db,"entrenamientos"),where("uid","==",uid),orderBy("fecha","desc"),limit(20));
 
-    onSnapshot(q,(snap)=>{
+onSnapshot(q,(snap)=>{
 
-        let bestTime = 999;
-        let maxSpeed = 0;
+let best=999;
+let speed=0;
+const tiempos=[],fechas=[];
 
-        const tiempos = [];
-        const fechas = [];
+historyBody.innerHTML="";
 
-        historyBody.innerHTML = "";
+snap.docs.reverse().forEach(d=>{
+const data=d.data();
 
-        snap.docs.reverse().forEach(d=>{
+tiempos.push(data.tiempo);
+fechas.push(new Date(data.fecha.seconds*1000).toLocaleDateString());
 
-            const data = d.data();
+if(data.tiempo<best)best=data.tiempo;
+if(data.velocidad>speed)speed=data.velocidad;
 
-            tiempos.push(data.tiempo);
-            fechas.push(new Date(data.fecha.seconds*1000).toLocaleDateString());
+historyBody.innerHTML+=`<tr><td>${data.tiempo}</td><td>${data.velocidad}</td></tr>`;
+});
 
-            if(data.tiempo < bestTime) bestTime = data.tiempo;
-            if(data.velocidad > maxSpeed) maxSpeed = data.velocidad;
+updateUI(best,speed);
+updateChart(fechas,tiempos);
 
-            historyBody.innerHTML += `
-                <tr>
-                    <td>${data.tiempo}s</td>
-                    <td>${data.velocidad} km/h</td>
-                </tr>
-            `;
-        });
-
-        updateUI(bestTime, maxSpeed);
-        updateChart(fechas, tiempos);
-
-    });
+});
 }
 
-// ===============================
-// 8. RIVALES PRO
-// ===============================
+// RIVALES
 async function findRivals(user){
-
-    const snap = await getDocs(collection(db,"users"));
-
-    return snap.docs
-        .map(d=>d.data())
-        .filter(u =>
-            u.categoria === user.categoria &&
-            Math.abs(u.peso - user.peso) <= 3 &&
-            u.bestTime !== 999
-        )
-        .sort((a,b)=> a.bestTime - b.bestTime)
-        .slice(0,5);
+const snap=await getDocs(collection(db,"users"));
+return snap.docs.map(d=>d.data()).filter(u=>u.categoria===user.categoria).slice(0,5);
 }
 
-function renderRivals(rivals){
-
-    const container = document.getElementById("rivals");
-
-    container.innerHTML = rivals.map(r=>`
-        <div class="rival">
-            <b>${r.name}</b>
-            <span>${r.bestTime}s</span>
-        </div>
-    `).join("");
+function renderRivals(r){
+rivals.innerHTML=r.map(x=>`<div class="rival">${x.name} ${x.bestTime}</div>`).join("");
 }
 
-// ===============================
-// 9. RANKING GLOBAL
-// ===============================
+// RANKING
 async function loadRanking(){
-
-    const snap = await getDocs(
-        query(collection(db,"users"),orderBy("bestTime","asc"),limit(20))
-    );
-
-    rankingList.innerHTML = "";
-
-    snap.forEach((doc,i)=>{
-
-        const u = doc.data();
-
-        rankingList.innerHTML += `
-            <div class="rank-card">
-                <span>#${i+1}</span>
-                <b>${u.name}</b>
-                <span>${u.bestTime}s</span>
-            </div>
-        `;
-    });
-
-    animateUI();
+const snap=await getDocs(query(collection(db,"users"),orderBy("bestTime","asc"),limit(10)));
+rankingList.innerHTML="";
+snap.forEach((d,i)=>{
+const u=d.data();
+rankingList.innerHTML+=`<div class="rank-card">#${i+1} ${u.name} ${u.bestTime}</div>`;
+});
 }
 
-// ===============================
-// 10. FEED SOCIAL
-// ===============================
+// FEED
+window.createPost=async()=>{
+await addDoc(collection(db,"posts"),{
+uid:auth.currentUser.uid,
+text:postText.value,
+date:new Date()
+});
+postText.value="";
+};
+
 async function loadFeed(){
-
-    const snap = await getDocs(
-        query(collection(db,"posts"),orderBy("date","desc"),limit(20))
-    );
-
-    feedList.innerHTML = "";
-
-    snap.forEach(async d=>{
-
-        const p = d.data();
-        const userSnap = await getDoc(doc(db,"users",p.uid));
-        const u = userSnap.data();
-
-        feedList.innerHTML += `
-            <div class="post">
-                <div class="post-header">
-                    <img src="${u?.photoURL || ''}">
-                    <b>${u?.name}</b>
-                </div>
-                <p>${p.text}</p>
-            </div>
-        `;
-    });
-
-    animateUI();
+const snap=await getDocs(query(collection(db,"posts"),orderBy("date","desc"),limit(20)));
+feedList.innerHTML="";
+snap.forEach(async d=>{
+const p=d.data();
+const u=(await getDoc(doc(db,"users",p.uid))).data();
+feedList.innerHTML+=`<div class="post"><div class="post-header"><img src="${u?.photoURL||''}"><b>${u?.name}</b></div><p>${p.text}</p></div>`;
+});
 }
 
-// ===============================
-// 11. CHART
-// ===============================
+// DUELOS
+window.createDuel=async()=>{
+await addDoc(collection(db,"duels"),{
+from:auth.currentUser.uid,
+status:"pending",
+createdAt:new Date()
+});
+};
+
+async function loadDuels(){
+const snap=await getDocs(collection(db,"duels"));
+duelList.innerHTML="";
+snap.forEach(d=>{
+duelList.innerHTML+=`<div class="duel">${d.data().status}</div>`;
+});
+}
+
+// CHART
 function updateChart(labels,data){
-
-    if(mainChart) mainChart.destroy();
-
-    mainChart = new Chart(performanceChart,{
-        type:"line",
-        data:{
-            labels,
-            datasets:[{
-                data,
-                borderColor:"#00ff88",
-                fill:true
-            }]
-        }
-    });
+if(mainChart)mainChart.destroy();
+mainChart=new Chart(performanceChart,{type:"line",data:{labels,datasets:[{data,borderColor:"#00ff88"}]}});
 }
 
-// ===============================
-// 12. UI
-// ===============================
+// UI
 function updateUI(best,speed){
-
-    bestTime.innerText = best !== 999 ? best.toFixed(3) : "--";
-    maxSpeedDisplay.innerText = speed;
+bestTime.innerText=best!==999?best:"--";
+maxSpeedDisplay.innerText=speed;
 }
 
-// ===============================
-// 13. ANIMACIONES
-// ===============================
-function animateUI(){
-
-    gsap.from(".post",{opacity:0,y:20,stagger:0.1});
-    gsap.from(".rank-card",{x:-20,opacity:0,stagger:0.1});
-}
-
-// ===============================
-// 14. TOAST
-// ===============================
-function showToast(msg,type){
-
-    const t = document.createElement("div");
-    t.className = "toast "+type;
-    t.innerText = msg;
-
-    document.body.appendChild(t);
-
-    setTimeout(()=>t.remove(),3000);
-}
+// LOGOUT
+window.logout=()=>signOut(auth);
