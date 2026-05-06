@@ -3,101 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>GATELOGIC PRO</title>
 
+<!-- FONTS -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@600;800&display=swap" rel="stylesheet">
 
+<!-- ICONOS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<!-- LIBS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
+<!-- CSS -->
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<!-- ========================= -->
-<!-- AUTH -->
-<!-- ========================= -->
+<!-- ===================================== -->
+<!-- AUTH SCREEN -->
+<!-- ===================================== -->
 <div id="login-screen" class="auth-viewport">
 
 <div class="auth-split-layout">
 
+<!-- LEFT -->
 <div class="auth-visual-side">
 <div class="overlay-gradient"></div>
+
 <div class="visual-content">
 <h1>GATE<span>LOGIC</span></h1>
-<p>Entrena. Compite. Domina.</p>
+<p>Entrena • Compite • Domina</p>
 </div>
 </div>
 
+<!-- RIGHT -->
 <div class="auth-form-side">
 
 <div class="tabs">
-<button onclick="switchTab('login')">Login</button>
-<button onclick="switchTab('register')">Register</button>
+<button onclick="switchTab('login')" class="tab-trigger active">Login</button>
+<button onclick="switchTab('register')" class="tab-trigger">Register</button>
 </div>
 
+<!-- LOGIN -->
 <div id="login-box">
-<input id="loginEmail" type="email">
-<input id="loginPass" type="password">
-<button onclick="login()">Entrar</button>
+
+<div class="input-wrapper-pro">
+<label>Email</label>
+<input id="loginEmail" type="email" placeholder="correo@email.com">
 </div>
 
+<div class="input-wrapper-pro">
+<label>Password</label>
+<input id="loginPass" type="password" placeholder="••••••">
+</div>
+
+<button onclick="login()" class="btn-gl-primary">
+Entrar <i class="fa fa-arrow-right"></i>
+</button>
+
+</div>
+
+<!-- REGISTER -->
 <div id="register-box" class="hidden">
-<input id="name" placeholder="Nombre">
-<input id="username" placeholder="Usuario">
-<input id="peso" placeholder="Peso">
-<input id="categoria" placeholder="Categoría">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="register()" class="btn-gl-primary">Crear cuenta</button>
+
+<div class="input-wrapper-pro">
+<label>Nombre</label>
+<input id="name" placeholder="Nombre completo">
+</div>
+
+<div class="input-wrapper-pro">
+<label>Usuario</label>
+<input id="username" placeholder="username">
+</div>
+
+<div class="input-wrapper-pro">
+<label>Peso</label>
+<input id="peso" placeholder="kg">
+</div>
+
+<div class="input-wrapper-pro">
+<label>Categoría</label>
+<input id="categoria" placeholder="pro / junior">
+</div>
+
+<div class="input-wrapper-pro">
+<label>Email</label>
+<input id="email" placeholder="email">
+</div>
+
+<div class="input-wrapper-pro">
+<label>Password</label>
+<input id="password" type="password">
+</div>
+
+<button onclick="register()" class="btn-gl-primary">
+Crear cuenta 🚀
+</button>
+
 </div>
 
 </div>
 </div>
 </div>
 
-<!-- ========================= -->
+<!-- ===================================== -->
 <!-- DASHBOARD -->
-<!-- ========================= -->
+<!-- ===================================== -->
 <div id="dashboard" class="hidden app-shell">
 
 <!-- SIDEBAR -->
 <div class="app-sidebar">
 
-<div class="nav-item" onclick="showSection('home')"><i class="fa fa-home"></i></div>
-<div class="nav-item" onclick="showSection('ranking')"><i class="fa fa-trophy"></i></div>
-<div class="nav-item" onclick="showSection('feed')"><i class="fa fa-fire"></i></div>
-<div class="nav-item" onclick="showSection('duelos')"><i class="fa fa-bolt"></i></div>
-<div class="nav-item" onclick="showSection('perfil')"><i class="fa fa-user"></i></div>
-<div class="nav-item" onclick="logout()"><i class="fa fa-sign-out"></i></div>
+<div class="nav-item active" onclick="showSection('home')">
+<i class="fa fa-home"></i>
+<span class="nav-label">Inicio</span>
+</div>
+
+<div class="nav-item" onclick="showSection('ranking')">
+<i class="fa fa-trophy"></i>
+<span class="nav-label">Ranking</span>
+</div>
+
+<div class="nav-item" onclick="showSection('feed')">
+<i class="fa fa-fire"></i>
+<span class="nav-label">Feed</span>
+</div>
+
+<div class="nav-item" onclick="showSection('duelos')">
+<i class="fa fa-bolt"></i>
+<span class="nav-label">Duelos</span>
+</div>
+
+<div class="nav-item" onclick="showSection('perfil')">
+<i class="fa fa-user"></i>
+<span class="nav-label">Perfil</span>
+</div>
+
+<div class="nav-item" onclick="showSection('compare')">
+<i class="fa fa-chart-line"></i>
+<span class="nav-label">Comparar</span>
+</div>
+
+<div class="nav-item" onclick="logout()">
+<i class="fa fa-sign-out"></i>
+</div>
 
 </div>
 
+<!-- CONTENT -->
 <div class="app-content-viewport">
 
-<h2>Hola <span id="user-name"></span></h2>
+<h2>Hola <span id="user-name">Piloto</span> 👋</h2>
 
-<!-- ========================= -->
-<!-- HOME -->
-<!-- ========================= -->
+<!-- ================= HOME ================= -->
 <div id="section-home" class="section">
 
 <div class="kpi-row">
-<div class="kpi-card"><div class="kpi-label">Best Time</div><div id="best-time">--</div></div>
-<div class="kpi-card"><div class="kpi-label">Top Speed</div><div id="max-speed-display">--</div></div>
+<div class="kpi-card">
+<div class="kpi-label">Best Time</div>
+<div id="best-time" class="kpi-value-group">--</div>
 </div>
 
-<form id="data-form">
-<input id="gate-time" placeholder="Tiempo">
-<input id="top-speed" placeholder="Velocidad">
+<div class="kpi-card">
+<div class="kpi-label">Top Speed</div>
+<div id="max-speed-display" class="kpi-value-group">--</div>
+</div>
+</div>
+
+<form id="data-form" class="glass-module-card">
+
+<h3>Registrar entrenamiento</h3>
+
+<input id="gate-time" placeholder="Tiempo (s)">
+<input id="top-speed" placeholder="Velocidad km/h">
 <input type="range" id="feeling-range">
-<button class="btn-submit-data">Guardar</button>
+
+<button class="btn-submit-data">Guardar datos</button>
+
 </form>
 
-<canvas id="performanceChart"></canvas>
+<div class="glass-module-card">
+<canvas id="performanceChart" height="120"></canvas>
+</div>
 
 <table class="gl-table">
 <tbody id="history-body"></tbody>
@@ -105,12 +196,10 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- RANKING -->
-<!-- ========================= -->
+<!-- ================= RANKING ================= -->
 <div id="section-ranking" class="section hidden">
 
-<h3>Ranking Mundial</h3>
+<h3>Ranking Mundial 🌍</h3>
 
 <select id="filter-country">
 <option value="COL">Colombia</option>
@@ -122,29 +211,26 @@
 <option value="junior">Junior</option>
 </select>
 
-<button onclick="loadRankingFiltered()">Filtrar</button>
+<button onclick="loadRanking()">Actualizar</button>
 
 <div id="rankingList"></div>
 
 </div>
 
-<!-- ========================= -->
-<!-- FEED -->
-<!-- ========================= -->
+<!-- ================= FEED ================= -->
 <div id="section-feed" class="section hidden">
 
-<h3>Feed BMX</h3>
+<h3>Feed BMX 🔥</h3>
 
-<textarea id="postText" placeholder="Comparte tu entrenamiento..."></textarea>
+<textarea id="postText" placeholder="Comparte tu progreso..."></textarea>
+
 <button onclick="createPost()">Publicar</button>
 
 <div id="feedList"></div>
 
 </div>
 
-<!-- ========================= -->
-<!-- DUELOS -->
-<!-- ========================= -->
+<!-- ================= DUELOS ================= -->
 <div id="section-duelos" class="section hidden">
 
 <h3>Duelos ⚔️</h3>
@@ -156,30 +242,24 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- PERFIL -->
-<!-- ========================= -->
+<!-- ================= PERFIL ================= -->
 <div id="section-perfil" class="section hidden">
 
 <h3>Perfil</h3>
 
-<img id="profile-pic" width="100">
-
-<input type="file" id="uploadPhoto">
+<img id="profile-pic" width="100" style="border-radius:50%;">
 
 <input id="editName" placeholder="Nombre">
 <input id="editPeso" placeholder="Peso">
 
-<button onclick="updateProfileData()">Guardar perfil</button>
+<button onclick="updateProfileData()">Guardar</button>
 
 </div>
 
-<!-- ========================= -->
-<!-- COMPARADOR -->
-<!-- ========================= -->
+<!-- ================= COMPARADOR ================= -->
 <div id="section-compare" class="section hidden">
 
-<h3>Comparar Pilotos</h3>
+<h3>Comparar pilotos</h3>
 
 <input id="pilot1" placeholder="Email piloto 1">
 <input id="pilot2" placeholder="Email piloto 2">
@@ -193,11 +273,10 @@
 </div>
 </div>
 
-<!-- ========================= -->
 <!-- TOAST -->
-<!-- ========================= -->
 <div id="toast-container"></div>
 
+<!-- JS -->
 <script type="module" src="app.js"></script>
 
 <script>
