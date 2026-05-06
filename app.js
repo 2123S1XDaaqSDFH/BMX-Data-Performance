@@ -1,9 +1,9 @@
 /**
- * GATELOGIC PRO - CORE ENGINE v3.0 (FIXED)
+ * GATELOGIC PRO - CORE ENGINE v4.0 (PRO CLEAN)
  */
 
 // ===============================
-// 1. IMPORTS FIREBASE
+// 1. FIREBASE IMPORTS
 // ===============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
@@ -27,286 +27,327 @@ import {
     limit,
     doc,
     setDoc,
-    getDoc
+    getDoc,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
 // ===============================
-// 2. CONFIG FIREBASE
+// 2. CONFIG
 // ===============================
 const firebaseConfig = {
-    apiKey: "AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
+    apiKey: "TU_API_KEY",
     authDomain: "gatelogic.firebaseapp.com",
     projectId: "gatelogic",
     storageBucket: "gatelogic.firebasestorage.app",
     messagingSenderId: "951205968408",
-    appId: "1:951205968408:web:004e0542540ea86318216d",
-    measurementId: "G-Q6RCN7L40G"
+    appId: "1:951205968408:web:004e0542540ea86318216d"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let mainChart;
+let currentUserData = null;
 
 // ===============================
-// 3. ANIMACIONES
-// ===============================
-const animateEntrance = () => {
-    const tl = gsap.timeline();
-
-    tl.to("#app-preloader", { duration: 0.6, opacity: 0, display: "none" })
-      .from(".sidebar", { x: -100, opacity: 0, duration: 0.6 })
-      .from(".kpi-card", { y: 40, opacity: 0, stagger: 0.1 })
-      .from(".glass-module-card", { y: 30, opacity: 0, stagger: 0.1 });
-};
-
-// ===============================
-// 4. AUTH UI SWITCH
-// ===============================
-window.switchTab = (type) => {
-    document.getElementById('login-box').classList.toggle('hidden', type !== 'login');
-    document.getElementById('register-box').classList.toggle('hidden', type === 'login');
-};
-
-// ===============================
-// 5. LOGIN
+// 3. AUTH
 // ===============================
 window.login = async () => {
-    const email = document.getElementById("loginEmail").value;
-    const pass = document.getElementById("loginPass").value;
-
-    if (!email || !pass) {
-        showToast("Completa los campos", "error");
-        return;
-    }
-
     try {
-        await signInWithEmailAndPassword(auth, email, pass);
+        await signInWithEmailAndPassword(
+            auth,
+            loginEmail.value,
+            loginPass.value
+        );
         showToast("Bienvenido 🚀", "success");
     } catch (e) {
         showToast(e.message, "error");
     }
 };
 
-// ===============================
-// 6. REGISTER
-// ===============================
 window.register = async () => {
-
-    const name = document.getElementById("name").value;
-    const username = document.getElementById("username").value;
-    const peso = document.getElementById("peso").value;
-    const categoria = document.getElementById("categoria").value;
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-
-    if (!name || !email || !pass) {
-        showToast("Completa todos los campos", "error");
-        return;
-    }
-
     try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        const cred = await createUserWithEmailAndPassword(
+            auth,
+            email.value,
+            password.value
+        );
 
-        // Guardar perfil
-        await setDoc(doc(db, "users", cred.user.uid), {
-            name,
-            username,
-            peso: parseFloat(peso),
-            categoria,
-            email,
+        const userData = {
+            name: name.value,
+            username: username.value,
+            peso: parseFloat(peso.value),
+            categoria: categoria.value,
+            pais: "Colombia",
+            bestTime: 999,
+            photoURL: "",
             createdAt: new Date()
-        });
+        };
 
-        // Nombre visible
+        await setDoc(doc(db, "users", cred.user.uid), userData);
+
         await updateProfile(cred.user, {
-            displayName: name
+            displayName: userData.name
         });
 
-        showToast("Registro exitoso 🔥", "success");
+        showToast("Cuenta creada 🔥", "success");
 
     } catch (e) {
         showToast(e.message, "error");
     }
 };
 
-// ===============================
-// 7. LOGOUT
-// ===============================
 window.logout = () => signOut(auth);
 
 // ===============================
-// 8. SESSION CONTROL
+// 4. SESSION
 // ===============================
 onAuthStateChanged(auth, async (user) => {
 
-    const loginScreen = document.getElementById('login-screen');
-    const dashboard = document.getElementById('dashboard');
-
     if (user) {
-        loginScreen.classList.add('hidden');
-        dashboard.classList.remove('hidden');
+        loginScreen.classList.add("hidden");
+        dashboard.classList.remove("hidden");
 
-        animateEntrance();
-
-        loadUser(user.uid);
+        await loadUser(user.uid);
         initDataEngine(user.uid);
+        loadFeed();
+        loadRanking();
 
     } else {
-        loginScreen.classList.remove('hidden');
-        dashboard.classList.add('hidden');
+        loginScreen.classList.remove("hidden");
+        dashboard.classList.add("hidden");
     }
 });
 
 // ===============================
-// 9. LOAD USER PROFILE
+// 5. USER PROFILE
 // ===============================
-const loadUser = async (uid) => {
-    const ref = doc(db, "users", uid);
-    const snap = await getDoc(ref);
+async function loadUser(uid){
 
-    if (snap.exists()) {
-        const data = snap.data();
+    const snap = await getDoc(doc(db,"users",uid));
 
-        document.getElementById("user-name").innerText = data.name || "Piloto";
-    }
+    if(!snap.exists()) return;
+
+    currentUserData = snap.data();
+
+    document.getElementById("user-name").innerText = currentUserData.name;
+
+    // Cargar rivales automáticamente
+    const rivals = await findRivals(currentUserData);
+    renderRivals(rivals);
+}
+
+// ===============================
+// 6. FOTO DE PERFIL
+// ===============================
+window.uploadProfilePhoto = async (file) => {
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const storageRef = ref(storage, `profiles/${user.uid}`);
+
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+
+    await setDoc(doc(db,"users",user.uid), {
+        photoURL: url
+    }, { merge: true });
+
+    showToast("Foto actualizada 🔥","success");
 };
 
 // ===============================
-// 10. DATA ENGINE
+// 7. DATA ENGINE
 // ===============================
-const initDataEngine = (uid) => {
+function initDataEngine(uid){
 
     const q = query(
-        collection(db, "entrenamientos"),
-        where("uid", "==", uid),
-        orderBy("fecha", "desc"),
+        collection(db,"entrenamientos"),
+        where("uid","==",uid),
+        orderBy("fecha","desc"),
         limit(20)
     );
 
-    onSnapshot(q, (snapshot) => {
-
-        const tiempos = [];
-        const fechas = [];
-
-        const historyBody = document.getElementById('history-body');
-        historyBody.innerHTML = "";
+    onSnapshot(q,(snap)=>{
 
         let bestTime = 999;
         let maxSpeed = 0;
 
-        snapshot.docs.reverse().forEach(docSnap => {
+        const tiempos = [];
+        const fechas = [];
 
-            const data = docSnap.data();
+        historyBody.innerHTML = "";
 
-            const dateStr = new Date(data.fecha.seconds * 1000)
-                .toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
+        snap.docs.reverse().forEach(d=>{
+
+            const data = d.data();
 
             tiempos.push(data.tiempo);
-            fechas.push(dateStr);
+            fechas.push(new Date(data.fecha.seconds*1000).toLocaleDateString());
 
-            if (data.tiempo < bestTime) bestTime = data.tiempo;
-            if (data.velocidad > maxSpeed) maxSpeed = data.velocidad;
+            if(data.tiempo < bestTime) bestTime = data.tiempo;
+            if(data.velocidad > maxSpeed) maxSpeed = data.velocidad;
 
-            const row = `
+            historyBody.innerHTML += `
                 <tr>
-                    <td>${dateStr}</td>
-                    <td class="text-neon">${data.tiempo}s</td>
+                    <td>${data.tiempo}s</td>
                     <td>${data.velocidad} km/h</td>
-                    <td><span class="badge-feeling">${data.feeling}</span></td>
                 </tr>
             `;
-
-            historyBody.insertAdjacentHTML('afterbegin', row);
         });
 
         updateUI(bestTime, maxSpeed);
         updateChart(fechas, tiempos);
+
     });
-};
+}
 
 // ===============================
-// 11. SUBIR DATOS
+// 8. RIVALES PRO
 // ===============================
-document.getElementById('data-form')?.addEventListener('submit', async (e) => {
+async function findRivals(user){
 
-    e.preventDefault();
+    const snap = await getDocs(collection(db,"users"));
 
-    const user = auth.currentUser;
+    return snap.docs
+        .map(d=>d.data())
+        .filter(u =>
+            u.categoria === user.categoria &&
+            Math.abs(u.peso - user.peso) <= 3 &&
+            u.bestTime !== 999
+        )
+        .sort((a,b)=> a.bestTime - b.bestTime)
+        .slice(0,5);
+}
 
-    try {
-        await addDoc(collection(db, "entrenamientos"), {
-            uid: user.uid,
-            tiempo: parseFloat(document.getElementById('gate-time').value),
-            velocidad: parseInt(document.getElementById('top-speed').value),
-            feeling: document.getElementById('feeling-range').value > 7 ? "Optimizado" : "Recuperación",
-            fecha: new Date()
-        });
+function renderRivals(rivals){
 
-        showToast("Datos guardados", "success");
-        e.target.reset();
+    const container = document.getElementById("rivals");
 
-    } catch (e) {
-        showToast("Error al guardar", "error");
-    }
-});
-
-// ===============================
-// 12. UI UPDATE
-// ===============================
-const updateUI = (best, speed) => {
-
-    document.getElementById('best-time').innerText =
-        best !== 999 ? best.toFixed(3) : "--";
-
-    document.getElementById('max-speed-display').innerText = speed;
-};
+    container.innerHTML = rivals.map(r=>`
+        <div class="rival">
+            <b>${r.name}</b>
+            <span>${r.bestTime}s</span>
+        </div>
+    `).join("");
+}
 
 // ===============================
-// 13. CHART
+// 9. RANKING GLOBAL
 // ===============================
-const updateChart = (labels, data) => {
+async function loadRanking(){
 
-    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const snap = await getDocs(
+        query(collection(db,"users"),orderBy("bestTime","asc"),limit(20))
+    );
 
-    if (mainChart) mainChart.destroy();
+    rankingList.innerHTML = "";
 
-    mainChart = new Chart(ctx, {
-        type: 'line',
-        data: {
+    snap.forEach((doc,i)=>{
+
+        const u = doc.data();
+
+        rankingList.innerHTML += `
+            <div class="rank-card">
+                <span>#${i+1}</span>
+                <b>${u.name}</b>
+                <span>${u.bestTime}s</span>
+            </div>
+        `;
+    });
+
+    animateUI();
+}
+
+// ===============================
+// 10. FEED SOCIAL
+// ===============================
+async function loadFeed(){
+
+    const snap = await getDocs(
+        query(collection(db,"posts"),orderBy("date","desc"),limit(20))
+    );
+
+    feedList.innerHTML = "";
+
+    snap.forEach(async d=>{
+
+        const p = d.data();
+        const userSnap = await getDoc(doc(db,"users",p.uid));
+        const u = userSnap.data();
+
+        feedList.innerHTML += `
+            <div class="post">
+                <div class="post-header">
+                    <img src="${u?.photoURL || ''}">
+                    <b>${u?.name}</b>
+                </div>
+                <p>${p.text}</p>
+            </div>
+        `;
+    });
+
+    animateUI();
+}
+
+// ===============================
+// 11. CHART
+// ===============================
+function updateChart(labels,data){
+
+    if(mainChart) mainChart.destroy();
+
+    mainChart = new Chart(performanceChart,{
+        type:"line",
+        data:{
             labels,
-            datasets: [{
+            datasets:[{
                 data,
-                borderColor: '#00ff88',
-                backgroundColor: 'rgba(0,255,136,0.1)',
-                tension: 0.4,
-                fill: true
+                borderColor:"#00ff88",
+                fill:true
             }]
-        },
-        options: {
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { ticks: { color: "#666" } },
-                x: { ticks: { color: "#666" } }
-            }
         }
     });
-};
+}
+
+// ===============================
+// 12. UI
+// ===============================
+function updateUI(best,speed){
+
+    bestTime.innerText = best !== 999 ? best.toFixed(3) : "--";
+    maxSpeedDisplay.innerText = speed;
+}
+
+// ===============================
+// 13. ANIMACIONES
+// ===============================
+function animateUI(){
+
+    gsap.from(".post",{opacity:0,y:20,stagger:0.1});
+    gsap.from(".rank-card",{x:-20,opacity:0,stagger:0.1});
+}
 
 // ===============================
 // 14. TOAST
 // ===============================
-const showToast = (msg, type) => {
+function showToast(msg,type){
 
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+    const t = document.createElement("div");
+    t.className = "toast "+type;
+    t.innerText = msg;
 
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerText = msg;
+    document.body.appendChild(t);
 
-    container.appendChild(toast);
-
-    setTimeout(() => toast.remove(), 3000);
-};
+    setTimeout(()=>t.remove(),3000);
+}
