@@ -28,17 +28,17 @@ getDocs
 
 const firebaseConfig = {
 
-apiKey: "TU_API_KEY",
+apiKey: "AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
 
-authDomain: "TU_AUTH_DOMAIN",
+authDomain: "gatelogic.firebaseapp.com",
 
-projectId: "TU_PROJECT_ID",
+projectId: "gatelogic",
 
-storageBucket: "TU_STORAGE_BUCKET",
+storageBucket: "gatelogic.firebasestorage.app",
 
-messagingSenderId: "TU_MESSAGING_ID",
+messagingSenderId: "951205968408",
 
-appId: "TU_APP_ID"
+appId: "1:951205968408:web:004e0542540ea86318216d"
 };
 
 const app = initializeApp(firebaseConfig);
