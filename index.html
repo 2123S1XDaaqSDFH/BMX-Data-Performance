@@ -1,68 +1,69 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GATELOGIC PRO</title>
+<title>GATELOGIC X</title>
 
-<!-- FONTS -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
-<!-- ICONOS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- LIBS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-<!-- CSS -->
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
-<!-- ===================================== -->
-<!-- AUTH SCREEN -->
-<!-- ===================================== -->
-<div id="login-screen" class="auth-viewport">
+<!-- BACKGROUND -->
+<div class="bg-video"></div>
+<div class="bg-overlay"></div>
+<div class="gradient-ball ball-1"></div>
+<div class="gradient-ball ball-2"></div>
 
-<div class="auth-split-layout">
+<!-- AUTH -->
+<section id="login-screen" class="auth-screen">
 
-<!-- LEFT -->
-<div class="auth-visual-side">
-<div class="overlay-gradient"></div>
+<div class="auth-card">
 
-<div class="visual-content">
+<div class="logo-wrap">
 <h1>GATE<span>LOGIC</span></h1>
-<p>Entrena • Compite • Domina</p>
+<p>WORLD BMX SYSTEM</p>
 </div>
-</div>
-
-<!-- RIGHT -->
-<div class="auth-form-side">
 
 <div class="tabs">
-<button onclick="switchTab('login')" class="tab-trigger active">Login</button>
-<button onclick="switchTab('register')" class="tab-trigger">Register</button>
+<button onclick="switchTab('login')" class="tab-btn active-tab" id="login-tab">
+LOGIN
+</button>
+
+<button onclick="switchTab('register')" class="tab-btn" id="register-tab">
+REGISTER
+</button>
 </div>
 
 <!-- LOGIN -->
 <div id="login-box">
 
-<div class="input-wrapper-pro">
+<div class="input-group">
 <label>Email</label>
-<input id="loginEmail" type="email" placeholder="correo@email.com">
+<input type="email" id="loginEmail" placeholder="email@gmail.com">
 </div>
 
-<div class="input-wrapper-pro">
+<div class="input-group">
 <label>Password</label>
-<input id="loginPass" type="password" placeholder="••••••">
+<input type="password" id="loginPass" placeholder="********">
 </div>
 
-<button onclick="login()" class="btn-gl-primary">
-Entrar <i class="fa fa-arrow-right"></i>
+<button onclick="login()" class="primary-btn">
+ENTRAR
 </button>
 
 </div>
@@ -70,219 +71,459 @@ Entrar <i class="fa fa-arrow-right"></i>
 <!-- REGISTER -->
 <div id="register-box" class="hidden">
 
-<div class="input-wrapper-pro">
+<div class="input-group">
 <label>Nombre</label>
 <input id="name" placeholder="Nombre completo">
 </div>
 
-<div class="input-wrapper-pro">
-<label>Usuario</label>
-<input id="username" placeholder="username">
+<div class="input-group">
+<label>Username</label>
+<input id="username" placeholder="@usuario">
 </div>
 
-<div class="input-wrapper-pro">
+<div class="grid-2">
+
+<div class="input-group">
 <label>Peso</label>
-<input id="peso" placeholder="kg">
+<input id="peso" placeholder="70">
 </div>
 
-<div class="input-wrapper-pro">
+<div class="input-group">
 <label>Categoría</label>
-<input id="categoria" placeholder="pro / junior">
+<select id="categoria">
+<option value="Junior">Junior</option>
+<option value="Elite">Elite</option>
+<option value="Pro">Pro</option>
+</select>
 </div>
 
-<div class="input-wrapper-pro">
+</div>
+
+<div class="input-group">
 <label>Email</label>
-<input id="email" placeholder="email">
+<input id="email" placeholder="email@gmail.com">
 </div>
 
-<div class="input-wrapper-pro">
+<div class="input-group">
 <label>Password</label>
-<input id="password" type="password">
+<input type="password" id="password" placeholder="********">
 </div>
 
-<button onclick="register()" class="btn-gl-primary">
-Crear cuenta 🚀
+<button onclick="register()" class="primary-btn">
+CREAR CUENTA
 </button>
 
 </div>
 
 </div>
-</div>
-</div>
 
-<!-- ===================================== -->
+</section>
+
 <!-- DASHBOARD -->
-<!-- ===================================== -->
-<div id="dashboard" class="hidden app-shell">
+<section id="dashboard" class="hidden dashboard">
 
 <!-- SIDEBAR -->
-<div class="app-sidebar">
+<aside class="sidebar">
 
-<div class="nav-item active" onclick="showSection('home')">
-<i class="fa fa-home"></i>
-<span class="nav-label">Inicio</span>
+<div class="sidebar-top">
+
+<div class="sidebar-logo">
+GX
 </div>
 
-<div class="nav-item" onclick="showSection('ranking')">
-<i class="fa fa-trophy"></i>
-<span class="nav-label">Ranking</span>
+<div class="menu">
+
+<div class="menu-item active-menu" onclick="showSection('home')">
+<i class="fa-solid fa-chart-line"></i>
+<span>Dashboard</span>
 </div>
 
-<div class="nav-item" onclick="showSection('feed')">
-<i class="fa fa-fire"></i>
-<span class="nav-label">Feed</span>
+<div class="menu-item" onclick="showSection('ranking')">
+<i class="fa-solid fa-trophy"></i>
+<span>Ranking</span>
 </div>
 
-<div class="nav-item" onclick="showSection('duelos')">
-<i class="fa fa-bolt"></i>
-<span class="nav-label">Duelos</span>
+<div class="menu-item" onclick="showSection('feed')">
+<i class="fa-solid fa-fire"></i>
+<span>Feed</span>
 </div>
 
-<div class="nav-item" onclick="showSection('perfil')">
-<i class="fa fa-user"></i>
-<span class="nav-label">Perfil</span>
+<div class="menu-item" onclick="showSection('duelos')">
+<i class="fa-solid fa-bolt"></i>
+<span>Duelos</span>
 </div>
 
-<div class="nav-item" onclick="showSection('compare')">
-<i class="fa fa-chart-line"></i>
-<span class="nav-label">Comparar</span>
+<div class="menu-item" onclick="showSection('compare')">
+<i class="fa-solid fa-code-compare"></i>
+<span>Comparar</span>
 </div>
 
-<div class="nav-item" onclick="logout()">
-<i class="fa fa-sign-out"></i>
+<div class="menu-item" onclick="showSection('perfil')">
+<i class="fa-solid fa-user"></i>
+<span>Perfil</span>
 </div>
 
 </div>
+
+</div>
+
+<div class="sidebar-bottom">
+
+<button onclick="logout()" class="logout-btn">
+<i class="fa-solid fa-right-from-bracket"></i>
+Cerrar sesión
+</button>
+
+</div>
+
+</aside>
 
 <!-- CONTENT -->
-<div class="app-content-viewport">
+<main class="main-content">
 
-<h2>Hola <span id="user-name">Piloto</span> 👋</h2>
+<!-- TOP -->
+<div class="topbar">
 
-<!-- ================= HOME ================= -->
-<div id="section-home" class="section">
+<div>
+<h2 class="main-title">
+Hola <span id="user-name">Piloto</span>
+</h2>
 
-<div class="kpi-row">
+<p class="subtitle">
+Sistema competitivo BMX PRO
+</p>
+</div>
+
+<div class="top-actions">
+
+<div class="live-badge">
+<div class="live-dot"></div>
+ONLINE
+</div>
+
+</div>
+
+</div>
+
+<!-- HOME -->
+<section id="section-home" class="content-section">
+
+<div class="hero-card">
+
+<div>
+
+<h1>
+TRACK EVERYTHING.
+WIN EVERYTHING.
+</h1>
+
+<p>
+Sistema inteligente de rendimiento BMX.
+Analiza, compite y domina rankings mundiales.
+</p>
+
+<div class="hero-actions">
+<button class="primary-btn">
+WORLD RANKING
+</button>
+
+<button class="secondary-btn">
+PRO ANALYTICS
+</button>
+</div>
+
+</div>
+
+<div class="hero-right">
+
+<div class="mini-stat">
+<h3>TOP SPEED</h3>
+<span id="max-speed-display">0</span>
+</div>
+
+<div class="mini-stat">
+<h3>BEST TIME</h3>
+<span id="best-time">--</span>
+</div>
+
+</div>
+
+</div>
+
+<!-- KPI -->
+<div class="kpi-grid">
+
 <div class="kpi-card">
-<div class="kpi-label">Best Time</div>
-<div id="best-time" class="kpi-value-group">--</div>
+<div class="kpi-icon">
+<i class="fa-solid fa-gauge-high"></i>
+</div>
+
+<div>
+<h4>Velocidad Máxima</h4>
+<p id="speed-kpi">0 KM/H</p>
+</div>
 </div>
 
 <div class="kpi-card">
-<div class="kpi-label">Top Speed</div>
-<div id="max-speed-display" class="kpi-value-group">--</div>
+<div class="kpi-icon">
+<i class="fa-solid fa-stopwatch"></i>
+</div>
+
+<div>
+<h4>Mejor Tiempo</h4>
+<p id="time-kpi">--</p>
 </div>
 </div>
 
-<form id="data-form" class="glass-module-card">
+<div class="kpi-card">
+<div class="kpi-icon">
+<i class="fa-solid fa-earth-americas"></i>
+</div>
 
-<h3>Registrar entrenamiento</h3>
+<div>
+<h4>Ranking Global</h4>
+<p>#12</p>
+</div>
+</div>
 
-<input id="gate-time" placeholder="Tiempo (s)">
-<input id="top-speed" placeholder="Velocidad km/h">
-<input type="range" id="feeling-range">
+<div class="kpi-card">
+<div class="kpi-icon">
+<i class="fa-solid fa-bolt"></i>
+</div>
 
-<button class="btn-submit-data">Guardar datos</button>
+<div>
+<h4>Duelos</h4>
+<p>4 Activos</p>
+</div>
+</div>
+
+</div>
+
+<!-- GRID -->
+<div class="dashboard-grid">
+
+<!-- LEFT -->
+<div class="glass-card big-card">
+
+<div class="card-header">
+<h3>Performance</h3>
+</div>
+
+<canvas id="performanceChart"></canvas>
+
+</div>
+
+<!-- RIGHT -->
+<div class="glass-card">
+
+<div class="card-header">
+<h3>Nuevo Entrenamiento</h3>
+</div>
+
+<form id="data-form">
+
+<div class="input-group">
+<label>Tiempo Gate</label>
+<input id="gate-time" placeholder="3.421">
+</div>
+
+<div class="input-group">
+<label>Velocidad</label>
+<input id="top-speed" placeholder="61">
+</div>
+
+<div class="input-group">
+<label>Sensación</label>
+<input type="range" min="1" max="10" id="feeling-range">
+</div>
+
+<button class="primary-btn">
+Guardar sesión
+</button>
 
 </form>
 
-<div class="glass-module-card">
-<canvas id="performanceChart" height="120"></canvas>
 </div>
 
-<table class="gl-table">
+</div>
+
+<!-- TABLE -->
+<div class="glass-card">
+
+<div class="card-header">
+<h3>Historial</h3>
+</div>
+
+<table class="history-table">
+
+<thead>
+<tr>
+<th>Tiempo</th>
+<th>Velocidad</th>
+</tr>
+</thead>
+
 <tbody id="history-body"></tbody>
+
 </table>
 
 </div>
 
-<!-- ================= RANKING ================= -->
-<div id="section-ranking" class="section hidden">
+</section>
 
-<h3>Ranking Mundial 🌍</h3>
+<!-- RANKING -->
+<section id="section-ranking" class="content-section hidden">
 
-<select id="filter-country">
-<option value="COL">Colombia</option>
-<option value="USA">USA</option>
-</select>
+<div class="section-title">
+<h2>WORLD RANKING</h2>
+<p>Clasificación mundial BMX</p>
+</div>
 
-<select id="filter-category">
-<option value="pro">Pro</option>
-<option value="junior">Junior</option>
-</select>
+<div id="rankingList" class="ranking-grid"></div>
 
-<button onclick="loadRanking()">Actualizar</button>
+</section>
 
-<div id="rankingList"></div>
+<!-- FEED -->
+<section id="section-feed" class="content-section hidden">
+
+<div class="section-title">
+<h2>COMMUNITY FEED</h2>
+<p>Publicaciones globales</p>
+</div>
+
+<div class="glass-card post-create">
+
+<textarea id="postText" placeholder="Comparte tu entrenamiento..."></textarea>
+
+<button onclick="createPost()" class="primary-btn">
+PUBLICAR
+</button>
 
 </div>
 
-<!-- ================= FEED ================= -->
-<div id="section-feed" class="section hidden">
+<div id="feedList" class="feed-grid"></div>
 
-<h3>Feed BMX 🔥</h3>
+</section>
 
-<textarea id="postText" placeholder="Comparte tu progreso..."></textarea>
+<!-- DUELOS -->
+<section id="section-duelos" class="content-section hidden">
 
-<button onclick="createPost()">Publicar</button>
+<div class="section-title">
+<h2>DUELS</h2>
+<p>Retos entre pilotos</p>
+</div>
 
-<div id="feedList"></div>
+<div class="glass-card duel-create">
+
+<input id="rivalEmail" placeholder="Email del rival">
+
+<button onclick="createDuel()" class="primary-btn">
+RETAR
+</button>
 
 </div>
 
-<!-- ================= DUELOS ================= -->
-<div id="section-duelos" class="section hidden">
+<div id="duelList" class="duel-grid"></div>
 
-<h3>Duelos ⚔️</h3>
+</section>
 
-<input id="rivalEmail" placeholder="Email rival">
-<button onclick="createDuel()">Retar</button>
+<!-- COMPARE -->
+<section id="section-compare" class="content-section hidden">
 
-<div id="duelList"></div>
-
+<div class="section-title">
+<h2>COMPARE PILOTS</h2>
+<p>Comparador profesional</p>
 </div>
 
-<!-- ================= PERFIL ================= -->
-<div id="section-perfil" class="section hidden">
+<div class="compare-grid">
 
-<h3>Perfil</h3>
-
-<img id="profile-pic" width="100" style="border-radius:50%;">
-
-<input id="editName" placeholder="Nombre">
-<input id="editPeso" placeholder="Peso">
-
-<button onclick="updateProfileData()">Guardar</button>
-
-</div>
-
-<!-- ================= COMPARADOR ================= -->
-<div id="section-compare" class="section hidden">
-
-<h3>Comparar pilotos</h3>
+<div class="glass-card">
 
 <input id="pilot1" placeholder="Email piloto 1">
+
+</div>
+
+<div class="glass-card">
+
 <input id="pilot2" placeholder="Email piloto 2">
 
-<button onclick="comparePilots()">Comparar</button>
+</div>
+
+</div>
+
+<button onclick="comparePilots()" class="primary-btn compare-btn">
+COMPARAR
+</button>
 
 <div id="compareResult"></div>
 
+</section>
+
+<!-- PROFILE -->
+<section id="section-perfil" class="content-section hidden">
+
+<div class="profile-banner">
+
+<div class="profile-overlay"></div>
+
+<div class="profile-content">
+
+<img src="https://i.pravatar.cc/300" id="profile-pic">
+
+<div>
+<h2 id="profile-name">
+Piloto
+</h2>
+
+<p>
+GATELOGIC ELITE RIDER
+</p>
 </div>
 
 </div>
+
 </div>
+
+</section>
+
+</main>
+
+</section>
 
 <!-- TOAST -->
 <div id="toast-container"></div>
 
-<!-- JS -->
 <script type="module" src="app.js"></script>
 
 <script>
 function showSection(section){
-document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
-document.getElementById('section-'+section).classList.remove('hidden');
+
+document.querySelectorAll('.content-section')
+.forEach(s=>s.classList.add('hidden'));
+
+document
+.getElementById('section-'+section)
+.classList.remove('hidden');
+
+document.querySelectorAll('.menu-item')
+.forEach(m=>m.classList.remove('active-menu'));
+
+event.currentTarget.classList.add('active-menu');
+}
+
+function switchTab(type){
+
+document.getElementById('login-box')
+.classList.toggle('hidden',type !== 'login');
+
+document.getElementById('register-box')
+.classList.toggle('hidden',type === 'login');
+
+document.getElementById('login-tab')
+.classList.toggle('active-tab',type==='login');
+
+document.getElementById('register-tab')
+.classList.toggle('active-tab',type==='register');
 }
 </script>
 
