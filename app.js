@@ -1,196 +1,355 @@
+// ======================================
+// GATELOGIC PRO ENGINE v4.0 (FULL SYSTEM)
+// ======================================
+
+// ===============================
+// 1. FIREBASE IMPORTS
+// ===============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
 import {
-getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,updateProfile
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut,
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
-getFirestore,collection,addDoc,query,where,orderBy,onSnapshot,limit,doc,setDoc,getDoc,getDocs
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    limit,
+    doc,
+    setDoc,
+    getDoc,
+    getDocs,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import {
-getStorage,ref,uploadBytes,getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
+// ===============================
+// 2. CONFIG
+// ===============================
 const firebaseConfig = {
-apiKey:"AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
-authDomain:"gatelogic.firebaseapp.com",
-projectId:"gatelogic",
-storageBucket:"gatelogic.firebasestorage.app",
-messagingSenderId:"951205968408",
-appId:"1:951205968408:web:004e0542540ea86318216d"
+  apiKey: "AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
+  authDomain: "gatelogic.firebaseapp.com",
+  projectId: "gatelogic",
+  storageBucket: "gatelogic.firebasestorage.app",
+  messagingSenderId: "951205968408",
+  appId: "1:951205968408:web:004e0542540ea86318216d",
 };
 
+// ===============================
+// 3. INIT
+// ===============================
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 let mainChart;
-let currentUserData=null;
 
-// LOGIN
-window.login=async()=>{
-await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);
+// ===============================
+// 4. AUTH SYSTEM
+// ===============================
+window.login = async () => {
+    const email = loginEmail.value;
+    const pass = loginPass.value;
+
+    if(!email || !pass) return showToast("Campos vacíos","error");
+
+    try{
+        await signInWithEmailAndPassword(auth,email,pass);
+        showToast("Bienvenido 🚀","success");
+    }catch(e){
+        showToast(e.message,"error");
+    }
 };
 
-// REGISTER
-window.register=async()=>{
-const cred=await createUserWithEmailAndPassword(auth,email.value,password.value);
+window.register = async () => {
 
-await setDoc(doc(db,"users",cred.user.uid),{
-name:name.value,
-username:username.value,
-peso:parseFloat(peso.value),
-categoria:categoria.value,
-pais:"Colombia",
-bestTime:999,
-photoURL:""
-});
+    const data = {
+        name: name.value,
+        username: username.value,
+        peso: parseFloat(peso.value),
+        categoria: categoria.value,
+        email: email.value
+    };
 
-await updateProfile(cred.user,{displayName:name.value});
+    try{
+        const cred = await createUserWithEmailAndPassword(auth,email.value,password.value);
+
+        await setDoc(doc(db,"users",cred.user.uid),{
+            ...data,
+            bestTime: 999,
+            pais: "COL",
+            createdAt:new Date()
+        });
+
+        await updateProfile(cred.user,{displayName:data.name});
+
+        showToast("Cuenta creada 🔥","success");
+
+    }catch(e){
+        showToast(e.message,"error");
+    }
 };
 
-// SESSION
-onAuthStateChanged(auth,async(user)=>{
-if(user){
+window.logout = ()=> signOut(auth);
 
-gsap.to("#login-screen",{opacity:0,duration:0.4,onComplete:()=>{
-loginScreen.classList.add("hidden");
-dashboard.classList.remove("hidden");
+// ===============================
+// 5. SESSION
+// ===============================
+onAuthStateChanged(auth, async(user)=>{
 
-gsap.from("#dashboard",{opacity:0,duration:0.6});
+    if(user){
+        loginScreen.classList.add("hidden");
+        dashboard.classList.remove("hidden");
 
-loadUser(user.uid);
-initDataEngine(user.uid);
-loadFeed();
-loadRanking();
-loadDuels();
-}});
+        loadUser(user.uid);
+        initData(user.uid);
+        loadFeed();
+        loadRanking();
+        loadDuelos();
 
-}else{
-loginScreen.classList.remove("hidden");
-dashboard.classList.add("hidden");
-}
+    }else{
+        loginScreen.classList.remove("hidden");
+        dashboard.classList.add("hidden");
+    }
 });
 
-// USER
+// ===============================
+// 6. USER PROFILE
+// ===============================
 async function loadUser(uid){
-const snap=await getDoc(doc(db,"users",uid));
-currentUserData=snap.data();
-userName.innerText=currentUserData.name;
 
-const rivals=await findRivals(currentUserData);
-renderRivals(rivals);
+    const snap = await getDoc(doc(db,"users",uid));
+    const data = snap.data();
+
+    userName.innerText = data.name;
 }
 
-// FOTO
-window.uploadProfilePhoto=async(file)=>{
-const user=auth.currentUser;
-const storageRef=ref(storage,`profiles/${user.uid}`);
-await uploadBytes(storageRef,file);
-const url=await getDownloadURL(storageRef);
-await setDoc(doc(db,"users",user.uid),{photoURL:url},{merge:true});
-};
+// ===============================
+// 7. DATA ENGINE
+// ===============================
+function initData(uid){
 
-// DATA
-function initDataEngine(uid){
+    const q = query(
+        collection(db,"entrenamientos"),
+        where("uid","==",uid),
+        orderBy("fecha","desc"),
+        limit(20)
+    );
 
-const q=query(collection(db,"entrenamientos"),where("uid","==",uid),orderBy("fecha","desc"),limit(20));
+    onSnapshot(q,(snap)=>{
 
-onSnapshot(q,(snap)=>{
+        let best = 999;
+        let speed = 0;
+        historyBody.innerHTML="";
 
-let best=999;
-let speed=0;
-const tiempos=[],fechas=[];
+        snap.docs.forEach(d=>{
 
-historyBody.innerHTML="";
+            const data = d.data();
 
-snap.docs.reverse().forEach(d=>{
-const data=d.data();
+            if(data.tiempo < best) best = data.tiempo;
+            if(data.velocidad > speed) speed = data.velocidad;
 
-tiempos.push(data.tiempo);
-fechas.push(new Date(data.fecha.seconds*1000).toLocaleDateString());
+            historyBody.innerHTML += `
+            <tr>
+                <td>${data.tiempo}</td>
+                <td>${data.velocidad}</td>
+            </tr>`;
+        });
 
-if(data.tiempo<best)best=data.tiempo;
-if(data.velocidad>speed)speed=data.velocidad;
+        bestTime.innerText = best !== 999 ? best : "--";
+        maxSpeedDisplay.innerText = speed;
+    });
+}
 
-historyBody.innerHTML+=`<tr><td>${data.tiempo}</td><td>${data.velocidad}</td></tr>`;
+// ===============================
+// 8. SUBIR DATOS
+// ===============================
+dataForm?.addEventListener("submit", async(e)=>{
+
+    e.preventDefault();
+
+    const user = auth.currentUser;
+
+    await addDoc(collection(db,"entrenamientos"),{
+        uid:user.uid,
+        tiempo:parseFloat(gateTime.value),
+        velocidad:parseInt(topSpeed.value),
+        fecha:new Date()
+    });
+
+    showToast("Guardado","success");
 });
 
-updateUI(best,speed);
-updateChart(fechas,tiempos);
+// ===============================
+// 9. FEED (TIPO IG)
+// ===============================
+window.createPost = async ()=>{
 
-});
-}
+    const user = auth.currentUser;
 
-// RIVALES
-async function findRivals(user){
-const snap=await getDocs(collection(db,"users"));
-return snap.docs.map(d=>d.data()).filter(u=>u.categoria===user.categoria).slice(0,5);
-}
+    await addDoc(collection(db,"posts"),{
+        uid:user.uid,
+        text:postText.value,
+        date:new Date()
+    });
 
-function renderRivals(r){
-rivals.innerHTML=r.map(x=>`<div class="rival">${x.name} ${x.bestTime}</div>`).join("");
-}
-
-// RANKING
-async function loadRanking(){
-const snap=await getDocs(query(collection(db,"users"),orderBy("bestTime","asc"),limit(10)));
-rankingList.innerHTML="";
-snap.forEach((d,i)=>{
-const u=d.data();
-rankingList.innerHTML+=`<div class="rank-card">#${i+1} ${u.name} ${u.bestTime}</div>`;
-});
-}
-
-// FEED
-window.createPost=async()=>{
-await addDoc(collection(db,"posts"),{
-uid:auth.currentUser.uid,
-text:postText.value,
-date:new Date()
-});
-postText.value="";
+    showToast("Publicado","success");
 };
 
 async function loadFeed(){
-const snap=await getDocs(query(collection(db,"posts"),orderBy("date","desc"),limit(20)));
-feedList.innerHTML="";
-snap.forEach(async d=>{
-const p=d.data();
-const u=(await getDoc(doc(db,"users",p.uid))).data();
-feedList.innerHTML+=`<div class="post"><div class="post-header"><img src="${u?.photoURL||''}"><b>${u?.name}</b></div><p>${p.text}</p></div>`;
-});
+
+    const snap = await getDocs(query(collection(db,"posts"),orderBy("date","desc")));
+
+    feedList.innerHTML="";
+
+    for(const docSnap of snap.docs){
+
+        const p = docSnap.data();
+        const u = await getDoc(doc(db,"users",p.uid));
+
+        feedList.innerHTML += `
+        <div class="post">
+            <b>${u.data().name}</b>
+            <p>${p.text}</p>
+        </div>`;
+    }
 }
 
-// DUELOS
-window.createDuel=async()=>{
-await addDoc(collection(db,"duels"),{
-from:auth.currentUser.uid,
-status:"pending",
-createdAt:new Date()
-});
+// ===============================
+// 10. RANKING GLOBAL
+// ===============================
+async function loadRanking(){
+
+    const snap = await getDocs(query(collection(db,"users"),orderBy("bestTime","asc")));
+
+    rankingList.innerHTML="";
+
+    snap.forEach((docSnap,i)=>{
+
+        const d = docSnap.data();
+
+        rankingList.innerHTML += `
+        <div class="rank-card">
+            #${i+1} ${d.name} - ${d.bestTime}s
+        </div>`;
+    });
+}
+
+// ===============================
+// 11. DUELOS
+// ===============================
+window.createDuel = async ()=>{
+
+    const email = rivalEmail.value;
+    const user = auth.currentUser;
+
+    const snap = await getDocs(collection(db,"users"));
+
+    let rival=null;
+
+    snap.forEach(d=>{
+        if(d.data().email === email) rival=d.id;
+    });
+
+    if(!rival) return showToast("No encontrado","error");
+
+    await addDoc(collection(db,"duelos"),{
+        from:user.uid,
+        to:rival,
+        status:"pending",
+        date:new Date()
+    });
+
+    showToast("Reto enviado ⚔️","success");
 };
 
-async function loadDuels(){
-const snap=await getDocs(collection(db,"duels"));
-duelList.innerHTML="";
-snap.forEach(d=>{
-duelList.innerHTML+=`<div class="duel">${d.data().status}</div>`;
-});
+async function loadDuelos(){
+
+    const snap = await getDocs(collection(db,"duelos"));
+
+    duelList.innerHTML="";
+
+    snap.forEach(d=>{
+        const duel = d.data();
+
+        duelList.innerHTML += `
+        <div class="duel-card">
+            ${duel.from} vs ${duel.to} - ${duel.status}
+        </div>`;
+    });
 }
 
-// CHART
-function updateChart(labels,data){
-if(mainChart)mainChart.destroy();
-mainChart=new Chart(performanceChart,{type:"line",data:{labels,datasets:[{data,borderColor:"#00ff88"}]}});
+// ===============================
+// 12. COMPARADOR PRO
+// ===============================
+window.comparePilots = async ()=>{
+
+    const p1 = pilot1.value;
+    const p2 = pilot2.value;
+
+    const snap = await getDocs(collection(db,"users"));
+
+    let a,b;
+
+    snap.forEach(d=>{
+        if(d.data().email===p1) a=d.data();
+        if(d.data().email===p2) b=d.data();
+    });
+
+    compareResult.innerHTML = `
+    <div>
+        <h4>${a.name} vs ${b.name}</h4>
+        <p>${a.bestTime} vs ${b.bestTime}</p>
+    </div>`;
+};
+
+// ===============================
+// 13. RIVALES AUTOMÁTICOS
+// ===============================
+async function findRivals(user){
+
+    const snap = await getDocs(collection(db,"users"));
+
+    let rivals=[];
+
+    snap.forEach(d=>{
+        const u=d.data();
+
+        if(
+            u.categoria===user.categoria &&
+            Math.abs(u.peso-user.peso)<=3
+        ){
+            rivals.push(u);
+        }
+    });
+
+    return rivals;
 }
 
-// UI
-function updateUI(best,speed){
-bestTime.innerText=best!==999?best:"--";
-maxSpeedDisplay.innerText=speed;
+// ===============================
+// 14. UI
+// ===============================
+function showToast(msg,type){
+
+    const t = document.createElement("div");
+    t.innerText=msg;
+    t.className="toast";
+
+    toastContainer.appendChild(t);
+
+    setTimeout(()=>t.remove(),3000);
 }
 
-// LOGOUT
-window.logout=()=>signOut(auth);
+// ===============================
+// 15. ANIMACIONES
+// ===============================
+gsap.from(".kpi-card",{y:30,opacity:0,stagger:0.1});
