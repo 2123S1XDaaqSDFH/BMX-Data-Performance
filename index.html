@@ -3,420 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>GateLogic PRO</title>
 
-<!-- ========================= -->
-<!-- FONTS -->
-<!-- ========================= -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-/* ========================= */
-/* RESET */
-/* ========================= */
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+/* ===== RESET ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Inter;background:#050505;color:white;overflow:hidden}
 
-/* ========================= */
-/* ROOT */
-/* ========================= */
-:root{
-    --primary:#00ff88;
-    --bg:#050505;
-    --card:rgba(20,20,20,0.9);
-    --border:#222;
-    --text:#fff;
-    --dim:#888;
-}
-
-/* ========================= */
-/* BODY */
-/* ========================= */
-body{
-    font-family:'Inter',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    overflow:hidden;
-}
-
-/* ========================= */
-/* LOADER */
-/* ========================= */
+/* ===== LOADER ===== */
 #loader{
-    position:fixed;
-    inset:0;
-    background:black;
-    z-index:9999;
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
 }
+#loader video{width:300px}
 
-#loader video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.fade-out{
-    opacity:0;
-    transition:opacity 0.8s ease;
-}
-
-/* ========================= */
-/* BACKGROUND EFFECT */
-/* ========================= */
-.bg-glow{
-    position:absolute;
-    width:600px;
-    height:600px;
-    background:radial-gradient(circle,var(--primary),transparent);
-    filter:blur(120px);
-    top:-200px;
-    left:-200px;
-    opacity:0.2;
-}
-
-/* ========================= */
-/* AUTH WRAPPER */
-/* ========================= */
+/* ===== AUTH ===== */
 #auth{
-    position:absolute;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    transition:opacity 1s ease;
+display:flex;
+height:100vh;
+justify-content:center;
+align-items:center;
 }
-
-#auth.active{
-    opacity:1;
-}
-
-/* ========================= */
-/* CARD */
-/* ========================= */
 .auth-box{
-    width:420px;
-    background:var(--card);
-    backdrop-filter:blur(25px);
-    border:1px solid var(--border);
-    padding:40px;
-    border-radius:25px;
-    position:relative;
+background:#111;
+padding:40px;
+border-radius:20px;
+width:350px;
 }
-
-/* ========================= */
-/* LOGO */
-/* ========================= */
-.logo{
-    font-family:'Rajdhani',sans-serif;
-    font-size:2.8rem;
-    text-align:center;
-    margin-bottom:30px;
+input{
+width:100%;
+margin:8px 0;
+padding:12px;
+background:#000;
+border:1px solid #222;
+color:white;
 }
-
-.logo span{
-    color:var(--primary);
-}
-
-/* ========================= */
-/* INPUTS */
-/* ========================= */
-.input-group{
-    margin-bottom:15px;
-}
-
-.input-group label{
-    font-size:0.7rem;
-    color:var(--dim);
-    margin-bottom:5px;
-    display:block;
-}
-
-.input-group input,
-.input-group select{
-    width:100%;
-    padding:14px;
-    background:#000;
-    border:1px solid #222;
-    color:white;
-    border-radius:10px;
-}
-
-/* ========================= */
-/* BUTTON */
-/* ========================= */
 button{
-    width:100%;
-    padding:15px;
-    border:none;
-    background:var(--primary);
-    color:black;
-    font-weight:800;
-    border-radius:10px;
-    cursor:pointer;
-    transition:0.3s;
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#00ff88;
+border:none;
+cursor:pointer;
 }
 
-button:hover{
-    transform:translateY(-2px);
+/* ===== APP ===== */
+#app{display:none;height:100vh}
+aside{
+width:220px;
+background:#000;
+padding:20px;
+}
+main{
+flex:1;
+padding:20px;
+overflow-y:auto;
+}
+.container{display:flex;height:100%}
+
+/* ===== PROFILE ===== */
+.profile{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+}
+.profile img{
+width:60px;
+height:60px;
+border-radius:50%;
 }
 
-/* ========================= */
-/* SWITCH */
-/* ========================= */
-.switch{
-    text-align:center;
-    margin-top:15px;
-    font-size:0.8rem;
-    color:var(--dim);
-    cursor:pointer;
+/* ===== TABS ===== */
+.tab{display:none}
+.tab.active{display:block}
+
+/* ===== FEED ===== */
+.post{
+background:#111;
+padding:15px;
+margin-bottom:10px;
+border-radius:10px;
 }
 
-/* ========================= */
-/* HIDDEN */
-/* ========================= */
-.hidden{
-    display:none;
+/* ===== RANKING ===== */
+.rank{
+background:#111;
+padding:10px;
+margin:5px 0;
 }
 
-/* ========================= */
-/* ANIM */
-/* ========================= */
-.slide-up{
-    transform:translateY(40px);
-    opacity:0;
-    transition:all 0.6s ease;
-}
-
-.slide-up.active{
-    transform:translateY(0);
-    opacity:1;
-}
-
-/* ========================= */
-/* ERROR */
-/* ========================= */
-.error{
-    color:#ff4444;
-    font-size:0.7rem;
-    margin-top:5px;
-}
-
-/* ========================= */
-/* SUCCESS */
-/* ========================= */
-.success{
-    color:#00ff88;
-    font-size:0.7rem;
-}
-
-/* ========================= */
-/* EXTRA UI */
-/* ========================= */
-.footer{
-    margin-top:20px;
-    text-align:center;
-    font-size:0.6rem;
-    color:#444;
-}
+/* ===== CHART ===== */
+canvas{background:#111;padding:10px;border-radius:10px}
 
 </style>
 </head>
 
 <body>
 
-<!-- ========================= -->
 <!-- LOADER -->
-<!-- ========================= -->
 <div id="loader">
-    <video id="loaderVideo" muted playsinline>
-        <source src="loader.mp4" type="video/mp4">
-    </video>
+<video src="loader.mp4" autoplay muted></video>
 </div>
 
-<!-- ========================= -->
 <!-- AUTH -->
-<!-- ========================= -->
 <div id="auth">
+<div class="auth-box">
 
-<div class="bg-glow"></div>
+<h2>Login</h2>
+<input id="loginEmail" placeholder="Email">
+<input id="loginPass" type="password" placeholder="Password">
+<button onclick="login()">Entrar</button>
 
-<div class="auth-box slide-up" id="authBox">
+<hr>
 
-<div class="logo">G-<span>LOGIC</span></div>
-
-<!-- LOGIN -->
-<div id="loginForm">
-
-<div class="input-group">
-<label>Email</label>
-<input id="loginEmail">
-</div>
-
-<div class="input-group">
-<label>Password</label>
-<input type="password" id="loginPass">
-</div>
-
-<button onclick="login()">INICIAR SESIÓN</button>
-
-<div class="switch" onclick="showRegister()">Crear cuenta</div>
+<h2>Registro</h2>
+<input id="name" placeholder="Nombre">
+<input id="username" placeholder="Username">
+<input id="peso" placeholder="Peso">
+<input id="categoria" placeholder="Categoria">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="register()">Crear cuenta</button>
 
 </div>
-
-<!-- REGISTER -->
-<div id="registerForm" class="hidden">
-
-<div class="input-group">
-<label>Nombre</label>
-<input id="name">
 </div>
 
-<div class="input-group">
-<label>Username</label>
-<input id="username">
+<!-- APP -->
+<div id="app">
+<div class="container">
+
+<aside>
+<h2>GL</h2>
+<button onclick="showTab('feed')">Feed</button>
+<button onclick="showTab('ranking')">Ranking</button>
+<button onclick="showTab('compare')">Comparar</button>
+<button onclick="logout()">Salir</button>
+</aside>
+
+<main>
+
+<div class="profile">
+<img id="avatar" src="https://via.placeholder.com/60">
+<div>
+<h3 id="userName">User</h3>
+<input type="file" id="file">
+<button onclick="uploadPhoto()">Subir foto</button>
+</div>
 </div>
 
-<div class="input-group">
-<label>Peso</label>
-<input id="peso">
+<!-- FEED -->
+<div id="feed" class="tab active">
+<h2>Feed BMX</h2>
+<input id="postText" placeholder="Escribe algo">
+<button onclick="createPost()">Publicar</button>
+<div id="feedList"></div>
 </div>
 
-<div class="input-group">
-<label>Categoría</label>
-<select id="categoria">
-<option>Junior</option>
-<option>Elite</option>
-</select>
+<!-- RANKING -->
+<div id="ranking" class="tab">
+<h2>Ranking Mundial</h2>
+<div id="rankingList"></div>
 </div>
 
-<div class="input-group">
-<label>Email</label>
-<input id="email">
+<!-- COMPARE -->
+<div id="compare" class="tab">
+<h2>Comparar Pilotos</h2>
+<input id="user1" placeholder="UID 1">
+<input id="user2" placeholder="UID 2">
+<button onclick="compareUsers()">Comparar</button>
+<canvas id="chart"></canvas>
 </div>
 
-<div class="input-group">
-<label>Password</label>
-<input type="password" id="password">
+</main>
 </div>
-
-<button onclick="register()">REGISTRAR</button>
-
-<div class="switch" onclick="showLogin()">Ya tengo cuenta</div>
-
 </div>
-
-<div id="msg"></div>
-
-<div class="footer">GateLogic v3.0</div>
-
-</div>
-
-</div>
-
-<script>
-
-/* ========================= */
-/* LOADER */
-/* ========================= */
-const video=document.getElementById("loaderVideo");
-const loader=document.getElementById("loader");
-const auth=document.getElementById("auth");
-const box=document.getElementById("authBox");
-
-video.oncanplaythrough=()=>video.play();
-
-video.onended=()=>{
-    loader.classList.add("fade-out");
-
-    setTimeout(()=>{
-        loader.style.display="none";
-        auth.classList.add("active");
-
-        setTimeout(()=>{
-            box.classList.add("active");
-        },100);
-
-    },800);
-};
-
-/* ========================= */
-/* SWITCH */
-/* ========================= */
-function showRegister(){
-    loginForm.classList.add("hidden");
-    registerForm.classList.remove("hidden");
-}
-
-function showLogin(){
-    registerForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-}
-
-/* ========================= */
-/* VALIDATION */
-/* ========================= */
-function showMsg(text,type){
-    const msg=document.getElementById("msg");
-    msg.className=type;
-    msg.innerText=text;
-}
-
-/* ========================= */
-/* LOGIN */
-/* ========================= */
-function login(){
-    const email=document.getElementById("loginEmail").value;
-    const pass=document.getElementById("loginPass").value;
-
-    if(!email || !pass){
-        showMsg("Completa los campos","error");
-        return;
-    }
-
-    showMsg("Acceso correcto (simulado)","success");
-}
-
-/* ========================= */
-/* REGISTER */
-/* ========================= */
-function register(){
-    const name=document.getElementById("name").value;
-    const email=document.getElementById("email").value;
-
-    if(!name || !email){
-        showMsg("Faltan datos","error");
-        return;
-    }
-
-    showMsg("Registro exitoso (simulado)","success");
-}
 
 <script type="module">
 
+/* ===== FIREBASE ===== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  updateProfile,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+const firebaseConfig = {
+    /* TU_CONFIG */
+};
 
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+const storage = getStorage();
+
+/* ===== LOADER ===== */
+setTimeout(()=>{
+loader.style.display="none";
+},2500);
+
+/* ===== AUTH ===== */
+window.login = async ()=>{
+await signInWithEmailAndPassword(auth,loginEmail.value,loginPass.value);
+};
+
+window.register = async ()=>{
+const cred = await createUserWithEmailAndPassword(auth,email.value,password.value);
+
+await setDoc(doc(db,"users",cred.user.uid),{
+name:name.value,
+bestTime:999
+});
+};
+
+/* ===== STATE ===== */
+onAuthStateChanged(auth, async user=>{
+if(user){
+auth.style.display="none";
+app.style.display="block";
+loadUser(user.uid);
+loadFeed();
+loadRanking();
+}
+});
+
+/* ===== PROFILE ===== */
+async function loadUser(uid){
+const snap = await getDoc(doc(db,"users",uid));
+const d = snap.data();
+userName.innerText = d.name;
+if(d.photoURL) avatar.src = d.photoURL;
+}
+
+/* ===== FOTO ===== */
+window.uploadPhoto = async ()=>{
+const f = file.files[0];
+const user = auth.currentUser;
+
+const storageRef = ref(storage,"profiles/"+user.uid);
+await uploadBytes(storageRef,f);
+
+const url = await getDownloadURL(storageRef);
+
+await setDoc(doc(db,"users",user.uid),{photoURL:url},{merge:true});
+avatar.src = url;
+};
+
+/* ===== FEED ===== */
+window.createPost = async ()=>{
+await addDoc(collection(db,"posts"),{
+text:postText.value,
+uid:auth.currentUser.uid,
+date:new Date()
+});
+loadFeed();
+};
+
+async function loadFeed(){
+const snap = await getDocs(collection(db,"posts"));
+feedList.innerHTML="";
+snap.forEach(d=>{
+feedList.innerHTML += `<div class="post">${d.data().text}</div>`;
+});
+}
+
+/* ===== RANKING ===== */
+async function loadRanking(){
+const q = query(collection(db,"users"),orderBy("bestTime","asc"));
+const snap = await getDocs(q);
+rankingList.innerHTML="";
+snap.forEach(d=>{
+rankingList.innerHTML += `<div class="rank">${d.data().name} - ${d.data().bestTime}s</div>`;
+});
+}
+
+/* ===== COMPARE ===== */
+window.compareUsers = async ()=>{
+const u1 = await getDoc(doc(db,"users",user1.value));
+const u2 = await getDoc(doc(db,"users",user2.value));
+
+new Chart(chart,{
+type:'bar',
+data:{
+labels:['Tiempo'],
+datasets:[
+{label:u1.data().name,data:[u1.data().bestTime]},
+{label:u2.data().name,data:[u2.data().bestTime]}
+]
+}
+});
+};
+
+/* ===== NAV ===== */
+window.showTab = (id)=>{
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+};
+
+/* ===== LOGOUT ===== */
+window.logout = ()=>signOut(auth);
+
 </script>
 
 </body>
