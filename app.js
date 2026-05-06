@@ -1,362 +1,641 @@
-// ======================================
-// GATELOGIC PRO ENGINE v5.0 (STABLE)
-// ======================================
+// app.js
 
-// ===============================
-// 1. FIREBASE IMPORTS
-// ===============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut,
-    updateProfile
+getAuth,
+signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+onAuthStateChanged,
+signOut,
+updateProfile
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
-    getFirestore,
-    collection,
-    addDoc,
-    query,
-    where,
-    orderBy,
-    onSnapshot,
-    limit,
-    doc,
-    setDoc,
-    getDoc,
-    getDocs
+getFirestore,
+collection,
+addDoc,
+query,
+where,
+orderBy,
+onSnapshot,
+limit,
+doc,
+setDoc,
+getDoc,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ===============================
-// 2. CONFIG
-// ===============================
 const firebaseConfig = {
-  apiKey: "AIzaSyCWY4ojxhXI1EGgcjZKv8YmMNdYNqcnDa8",
-  authDomain: "gatelogic.firebaseapp.com",
-  projectId: "gatelogic",
-  storageBucket: "gatelogic.firebasestorage.app",
-  messagingSenderId: "951205968408",
-  appId: "1:951205968408:web:004e0542540ea86318216d",
+
+apiKey: "TU_API_KEY",
+
+authDomain: "TU_AUTH_DOMAIN",
+
+projectId: "TU_PROJECT_ID",
+
+storageBucket: "TU_STORAGE_BUCKET",
+
+messagingSenderId: "TU_MESSAGING_ID",
+
+appId: "TU_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
-// ===============================
-// 3. DOM (IMPORTANTE)
-// ===============================
-const $ = (id) => document.getElementById(id);
+const loginScreen = document.getElementById("login-screen");
 
-const loginScreen = $("login-screen");
-const dashboard = $("dashboard");
-const toastContainer = $("toast-container");
+const dashboard = document.getElementById("dashboard");
 
-const loginEmail = $("loginEmail");
-const loginPass = $("loginPass");
+const toastContainer = document.getElementById("toast-container");
 
-const nameInput = $("name");
-const usernameInput = $("username");
-const pesoInput = $("peso");
-const categoriaInput = $("categoria");
-const emailInput = $("email");
-const passwordInput = $("password");
+const userName = document.getElementById("user-name");
 
-const userName = $("user-name");
+const profileName = document.getElementById("profile-name");
 
-const dataForm = $("data-form");
-const gateTime = $("gate-time");
-const topSpeed = $("top-speed");
+const bestTime = document.getElementById("best-time");
 
-const historyBody = $("history-body");
-const bestTime = $("best-time");
-const maxSpeedDisplay = $("max-speed-display");
+const maxSpeedDisplay = document.getElementById("max-speed-display");
 
-const feedList = $("feed-list");
-const rankingList = $("ranking-list");
-const duelList = $("duel-list");
+const speedKpi = document.getElementById("speed-kpi");
 
-const postText = $("post-text");
-const rivalEmail = $("rival-email");
+const timeKpi = document.getElementById("time-kpi");
 
-const pilot1 = $("pilot1");
-const pilot2 = $("pilot2");
-const compareResult = $("compare-result");
+const historyBody = document.getElementById("history-body");
 
-// ===============================
-// 4. AUTH
-// ===============================
-window.login = async () => {
-    if (!loginEmail.value || !loginPass.value) {
-        return showToast("Campos vacíos", "error");
-    }
+const rankingList = document.getElementById("rankingList");
 
-    try {
-        await signInWithEmailAndPassword(auth, loginEmail.value, loginPass.value);
-        showToast("Bienvenido 🚀", "success");
-    } catch (e) {
-        showToast(e.message, "error");
-    }
+const feedList = document.getElementById("feedList");
+
+const duelList = document.getElementById("duelList");
+
+const compareResult = document.getElementById("compareResult");
+
+const dataForm = document.getElementById("data-form");
+
+let performanceChart;
+
+// LOGIN
+window.login = async()=>{
+
+try{
+
+const email = document.getElementById("loginEmail").value;
+
+const pass = document.getElementById("loginPass").value;
+
+await signInWithEmailAndPassword(auth,email,pass);
+
+showToast("Bienvenido 🚀");
+
+}catch(e){
+
+showToast(e.message);
+
+}
 };
 
-window.register = async () => {
+// REGISTER
+window.register = async()=>{
 
-    try {
-        const cred = await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+try{
 
-        await setDoc(doc(db, "users", cred.user.uid), {
-            name: nameInput.value,
-            username: usernameInput.value,
-            peso: parseFloat(pesoInput.value),
-            categoria: categoriaInput.value,
-            email: emailInput.value,
-            bestTime: 999,
-            pais: "COL",
-            createdAt: new Date()
-        });
+const name = document.getElementById("name").value;
 
-        await updateProfile(cred.user, {
-            displayName: nameInput.value
-        });
+const username = document.getElementById("username").value;
 
-        showToast("Cuenta creada 🔥", "success");
+const peso = parseFloat(document.getElementById("peso").value);
 
-    } catch (e) {
-        showToast(e.message, "error");
-    }
-};
+const categoria = document.getElementById("categoria").value;
 
-window.logout = () => signOut(auth);
+const email = document.getElementById("email").value;
 
-// ===============================
-// 5. SESSION CONTROL
-// ===============================
-onAuthStateChanged(auth, async (user) => {
+const password = document.getElementById("password").value;
 
-    if (user) {
-        loginScreen.classList.add("hidden");
-        dashboard.classList.remove("hidden");
+const cred = await createUserWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-        await loadUser(user.uid);
-        initData(user.uid);
-        loadFeed();
-        loadRanking();
-        loadDuelos();
-
-    } else {
-        loginScreen.classList.remove("hidden");
-        dashboard.classList.add("hidden");
-    }
+await updateProfile(cred.user,{
+displayName:name
 });
 
-// ===============================
-// 6. USER PROFILE
-// ===============================
-async function loadUser(uid) {
-    const snap = await getDoc(doc(db, "users", uid));
+await setDoc(doc(db,"users",cred.user.uid),{
 
-    if (!snap.exists()) return;
+name,
+username,
+peso,
+categoria,
+email,
+bestTime:999,
+photoURL:"https://i.pravatar.cc/300",
+createdAt:new Date()
 
-    const data = snap.data();
-    userName.innerText = data.name;
-}
-
-// ===============================
-// 7. DATA ENGINE
-// ===============================
-function initData(uid) {
-
-    const q = query(
-        collection(db, "entrenamientos"),
-        where("uid", "==", uid),
-        orderBy("fecha", "desc"),
-        limit(20)
-    );
-
-    onSnapshot(q, (snap) => {
-
-        let best = 999;
-        let speed = 0;
-        historyBody.innerHTML = "";
-
-        snap.docs.forEach(docSnap => {
-
-            const d = docSnap.data();
-
-            if (d.tiempo < best) best = d.tiempo;
-            if (d.velocidad > speed) speed = d.velocidad;
-
-            historyBody.innerHTML += `
-                <tr>
-                    <td>${d.tiempo}s</td>
-                    <td>${d.velocidad} km/h</td>
-                </tr>`;
-        });
-
-        bestTime.innerText = best !== 999 ? best : "--";
-        maxSpeedDisplay.innerText = speed;
-    });
-}
-
-// ===============================
-// 8. SUBIR DATOS
-// ===============================
-dataForm?.addEventListener("submit", async (e) => {
-
-    e.preventDefault();
-
-    const user = auth.currentUser;
-
-    await addDoc(collection(db, "entrenamientos"), {
-        uid: user.uid,
-        tiempo: parseFloat(gateTime.value),
-        velocidad: parseInt(topSpeed.value),
-        fecha: new Date()
-    });
-
-    showToast("Datos guardados", "success");
 });
 
-// ===============================
-// 9. FEED
-// ===============================
-window.createPost = async () => {
+showToast("Cuenta creada 🔥");
 
-    const user = auth.currentUser;
+}catch(e){
 
-    await addDoc(collection(db, "posts"), {
-        uid: user.uid,
-        text: postText.value,
-        date: new Date()
-    });
+showToast(e.message);
 
-    loadFeed();
+}
 };
 
-async function loadFeed() {
+// SESSION
+onAuthStateChanged(auth,async(user)=>{
 
-    const snap = await getDocs(query(collection(db, "posts"), orderBy("date", "desc")));
+if(user){
 
-    feedList.innerHTML = "";
+loginScreen.classList.add("hidden");
 
-    for (const docSnap of snap.docs) {
+dashboard.classList.remove("hidden");
 
-        const p = docSnap.data();
-        const u = await getDoc(doc(db, "users", p.uid));
+loadUser(user.uid);
 
-        feedList.innerHTML += `
-            <div class="post">
-                <b>${u.data().name}</b>
-                <p>${p.text}</p>
-            </div>`;
-    }
+loadStats(user.uid);
+
+loadRanking();
+
+loadFeed();
+
+loadDuelos();
+
+animateUI();
+
+}else{
+
+loginScreen.classList.remove("hidden");
+
+dashboard.classList.add("hidden");
+
 }
 
-// ===============================
-// 10. RANKING
-// ===============================
-async function loadRanking() {
+});
 
-    const snap = await getDocs(query(collection(db, "users"), orderBy("bestTime", "asc")));
-
-    rankingList.innerHTML = "";
-
-    snap.forEach((docSnap, i) => {
-
-        const d = docSnap.data();
-
-        rankingList.innerHTML += `
-            <div class="rank-card">
-                #${i + 1} ${d.name} - ${d.bestTime}s
-            </div>`;
-    });
-}
-
-// ===============================
-// 11. DUELOS
-// ===============================
-window.createDuel = async () => {
-
-    const user = auth.currentUser;
-
-    const snap = await getDocs(collection(db, "users"));
-
-    let rivalId = null;
-
-    snap.forEach(d => {
-        if (d.data().email === rivalEmail.value) {
-            rivalId = d.id;
-        }
-    });
-
-    if (!rivalId) return showToast("Rival no encontrado", "error");
-
-    await addDoc(collection(db, "duelos"), {
-        from: user.uid,
-        to: rivalId,
-        status: "pending",
-        date: new Date()
-    });
-
-    showToast("Duelo enviado ⚔️", "success");
+// LOGOUT
+window.logout = ()=>{
+signOut(auth);
 };
 
-async function loadDuelos() {
+// USER
+async function loadUser(uid){
 
-    const snap = await getDocs(collection(db, "duelos"));
+const snap = await getDoc(doc(db,"users",uid));
 
-    duelList.innerHTML = "";
+const data = snap.data();
 
-    snap.forEach(d => {
+userName.innerText = data.name;
 
-        const duel = d.data();
-
-        duelList.innerHTML += `
-            <div class="duel-card">
-                ${duel.from} vs ${duel.to} - ${duel.status}
-            </div>`;
-    });
+profileName.innerText = data.name;
 }
 
-// ===============================
-// 12. COMPARADOR
-// ===============================
-window.comparePilots = async () => {
+// TRAINING
+dataForm?.addEventListener("submit",async(e)=>{
 
-    const snap = await getDocs(collection(db, "users"));
+e.preventDefault();
 
-    let a, b;
+const user = auth.currentUser;
 
-    snap.forEach(d => {
-        if (d.data().email === pilot1.value) a = d.data();
-        if (d.data().email === pilot2.value) b = d.data();
-    });
+await addDoc(collection(db,"entrenamientos"),{
 
-    if (!a || !b) return;
+uid:user.uid,
 
-    compareResult.innerHTML = `
-        <div>
-            <h4>${a.name} vs ${b.name}</h4>
-            <p>${a.bestTime}s vs ${b.bestTime}s</p>
-        </div>`;
+tiempo:parseFloat(
+document.getElementById("gate-time").value
+),
+
+velocidad:parseInt(
+document.getElementById("top-speed").value
+),
+
+fecha:new Date()
+
+});
+
+showToast("Entrenamiento guardado");
+
+});
+
+// STATS
+function loadStats(uid){
+
+const q = query(
+collection(db,"entrenamientos"),
+where("uid","==",uid),
+orderBy("fecha","desc"),
+limit(20)
+);
+
+onSnapshot(q,(snap)=>{
+
+let labels=[];
+
+let times=[];
+
+let best=999;
+
+let speed=0;
+
+historyBody.innerHTML="";
+
+snap.docs.reverse().forEach(docu=>{
+
+const data = docu.data();
+
+labels.push("RUN");
+
+times.push(data.tiempo);
+
+if(data.tiempo < best){
+best=data.tiempo;
+}
+
+if(data.velocidad > speed){
+speed=data.velocidad;
+}
+
+historyBody.innerHTML += `
+<tr>
+<td>${data.tiempo}</td>
+<td>${data.velocidad}</td>
+</tr>
+`;
+
+});
+
+bestTime.innerText =
+best !== 999 ? best : "--";
+
+maxSpeedDisplay.innerText = speed;
+
+speedKpi.innerText = speed+" KM/H";
+
+timeKpi.innerText = best;
+
+renderChart(labels,times);
+
+});
+}
+
+// CHART
+function renderChart(labels,data){
+
+const ctx =
+document.getElementById("performanceChart");
+
+if(performanceChart){
+performanceChart.destroy();
+}
+
+performanceChart = new Chart(ctx,{
+
+type:"line",
+
+data:{
+labels,
+datasets:[{
+data,
+borderColor:"#00ff88",
+backgroundColor:"rgba(0,255,136,.1)",
+fill:true,
+tension:.4
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{
+display:false
+}
+}
+}
+
+});
+}
+
+// POSTS
+window.createPost = async()=>{
+
+const user = auth.currentUser;
+
+const text =
+document.getElementById("postText").value;
+
+await addDoc(collection(db,"posts"),{
+
+uid:user.uid,
+text,
+date:new Date()
+
+});
+
+showToast("Post publicado");
+
+loadFeed();
 };
 
-// ===============================
-// 13. TOAST
-// ===============================
-function showToast(msg, type) {
+// FEED
+async function loadFeed(){
 
-    if (!toastContainer) return;
+const q = query(
+collection(db,"posts"),
+orderBy("date","desc")
+);
 
-    const t = document.createElement("div");
-    t.className = `toast ${type}`;
-    t.innerText = msg;
+const snap = await getDocs(q);
 
-    toastContainer.appendChild(t);
+feedList.innerHTML="";
 
-    setTimeout(() => t.remove(), 3000);
+for(const d of snap.docs){
+
+const post = d.data();
+
+const userSnap =
+await getDoc(doc(db,"users",post.uid));
+
+const u = userSnap.data();
+
+feedList.innerHTML += `
+
+<div class="post-card">
+
+<div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;">
+
+<img src="${u.photoURL}"
+style="
+width:60px;
+height:60px;
+border-radius:50%;
+object-fit:cover;
+">
+
+<div>
+<h3>${u.name}</h3>
+<p style="opacity:.5;">@${u.username}</p>
+</div>
+
+</div>
+
+<p>${post.text}</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+// RANKING
+async function loadRanking(){
+
+const q = query(
+collection(db,"users"),
+orderBy("bestTime","asc")
+);
+
+const snap = await getDocs(q);
+
+rankingList.innerHTML="";
+
+let pos=1;
+
+snap.forEach(docu=>{
+
+const d = docu.data();
+
+rankingList.innerHTML += `
+
+<div class="rank-card">
+
+<div style="display:flex;justify-content:space-between;align-items:center;">
+
+<div style="display:flex;align-items:center;gap:20px;">
+
+<h1 style="
+font-size:45px;
+font-weight:900;
+color:#00ff88;
+">
+#${pos}
+</h1>
+
+<div>
+
+<h2>${d.name}</h2>
+
+<p>@${d.username}</p>
+
+</div>
+
+</div>
+
+<div>
+
+<h2>${d.bestTime}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+pos++;
+
+});
+
+}
+
+// DUELOS
+window.createDuel = async()=>{
+
+const rivalEmail =
+document.getElementById("rivalEmail").value;
+
+const user = auth.currentUser;
+
+const users = await getDocs(collection(db,"users"));
+
+let rivalId=null;
+
+users.forEach(d=>{
+
+if(d.data().email===rivalEmail){
+rivalId=d.id;
+}
+
+});
+
+if(!rivalId){
+
+showToast("Rival no encontrado");
+
+return;
+
+}
+
+await addDoc(collection(db,"duelos"),{
+
+from:user.uid,
+to:rivalId,
+status:"PENDING",
+date:new Date()
+
+});
+
+showToast("Duelo enviado ⚔️");
+
+loadDuelos();
+};
+
+// LOAD DUELOS
+async function loadDuelos(){
+
+const snap = await getDocs(collection(db,"duelos"));
+
+duelList.innerHTML="";
+
+snap.forEach(d=>{
+
+const duel = d.data();
+
+duelList.innerHTML += `
+
+<div class="duel-card">
+
+<h2>⚔️ DUEL</h2>
+
+<p>${duel.status}</p>
+
+</div>
+
+`;
+
+});
+
+}
+
+// COMPARE
+window.comparePilots = async()=>{
+
+const p1 =
+document.getElementById("pilot1").value;
+
+const p2 =
+document.getElementById("pilot2").value;
+
+const users =
+await getDocs(collection(db,"users"));
+
+let a=null;
+let b=null;
+
+users.forEach(d=>{
+
+const data = d.data();
+
+if(data.email===p1){
+a=data;
+}
+
+if(data.email===p2){
+b=data;
+}
+
+});
+
+if(!a || !b){
+
+showToast("Pilotos no encontrados");
+
+return;
+
+}
+
+compareResult.innerHTML = `
+
+<div class="glass-card">
+
+<h1 style="
+font-size:50px;
+font-weight:900;
+margin-bottom:20px;
+">
+${a.name} VS ${b.name}
+</h1>
+
+<div style="
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+">
+
+<div class="rank-card">
+<h2>${a.bestTime}</h2>
+<p>${a.categoria}</p>
+</div>
+
+<div class="rank-card">
+<h2>${b.bestTime}</h2>
+<p>${b.categoria}</p>
+</div>
+
+</div>
+
+</div>
+
+`;
+
+};
+
+// TOAST
+function showToast(msg){
+
+const toast = document.createElement("div");
+
+toast.className="toast";
+
+toast.innerText=msg;
+
+toastContainer.appendChild(toast);
+
+setTimeout(()=>{
+toast.remove();
+},3000);
+
+}
+
+// GSAP
+function animateUI(){
+
+gsap.from(".hero-card",{
+y:40,
+opacity:0,
+duration:1
+});
+
+gsap.from(".kpi-card",{
+y:30,
+opacity:0,
+stagger:.1,
+duration:.6
+});
+
+gsap.from(".glass-card",{
+opacity:0,
+y:40,
+duration:.8,
+stagger:.1
+});
+
 }
