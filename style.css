@@ -387,3 +387,248 @@ input[type="range"] {
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
 ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+
+/* =========================================================
+   🚀 9. PRO VISUAL BOOST (LEVEL INTERNATIONAL)
+   ========================================================= */
+
+/* Glow global */
+.glow {
+    box-shadow: 0 0 20px rgba(0,255,136,0.2),
+                0 0 40px rgba(0,255,136,0.1);
+}
+
+/* Glass más premium */
+.glass-module-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-module-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(0,255,136,0.08), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.glass-module-card:hover::before {
+    opacity: 1;
+}
+
+.glass-module-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    border-color: rgba(0,255,136,0.3);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* =========================================================
+   ⚡ BOTONES PRO
+   ========================================================= */
+
+.btn-gl-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gl-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.6s;
+}
+
+.btn-gl-primary:hover::after {
+    left: 100%;
+}
+
+/* =========================================================
+   🧠 INPUTS FUTURISTAS
+   ========================================================= */
+
+.input-inner input {
+    backdrop-filter: blur(10px);
+}
+
+.input-inner input:focus {
+    box-shadow: 0 0 20px rgba(0,255,136,0.2);
+}
+
+/* =========================================================
+   📊 KPI PRO ANIMATION
+   ========================================================= */
+
+.kpi-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top, rgba(0,255,136,0.15), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.kpi-card:hover::after {
+    opacity: 1;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+}
+
+/* =========================================================
+   🧩 AVATAR PRO (PERFIL)
+   ========================================================= */
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #111, #000);
+    border: 2px solid var(--neon-green);
+    box-shadow: 0 0 15px rgba(0,255,136,0.3);
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================================
+   🧠 TABLAS PRO
+   ========================================================= */
+
+.gl-table tr {
+    transition: 0.2s;
+}
+
+.gl-table tr:hover {
+    background: rgba(0,255,136,0.05);
+    transform: scale(1.01);
+}
+
+/* =========================================================
+   🚀 LOADER VIDEO (TU CASO)
+   ========================================================= */
+
+#video-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#video-loader video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fade suave al salir */
+.fade-out {
+    animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* =========================================================
+   ⚡ MICRO INTERACCIONES
+   ========================================================= */
+
+button, .nav-item {
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+/* =========================================================
+   🧠 SCROLL FX
+   ========================================================= */
+
+.app-content-viewport {
+    scroll-behavior: smooth;
+}
+
+/* =========================================================
+   🔥 BADGES PRO
+   ========================================================= */
+
+.badge-feeling {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(0,255,136,0.1);
+    color: var(--neon-green);
+    border: 1px solid rgba(0,255,136,0.2);
+}
+
+/* =========================================================
+   🚀 HOVER NAV PRO
+   ========================================================= */
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0%;
+    height: 2px;
+    background: var(--neon-green);
+    transition: 0.3s;
+}
+
+.nav-item:hover::after {
+    width: 80%;
+    left: 10%;
+}
+
+/* =========================================================
+   💎 TEXTO PREMIUM
+   ========================================================= */
+
+.neon-text {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(0,255,136,0.4);
+}
+
+/* =========================================================
+   🔥 RESPONSIVE PRO
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-form-side {
+        padding: 40px;
+    }
+}
