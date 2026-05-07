@@ -9,6 +9,7 @@
 <title>GATELOGIC | BMX PRO SYSTEM</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,21 +21,22 @@
 <body>
 
 <!-- ========================= -->
-<!-- BACKGROUND -->
+<!-- BACKGROUNDS -->
 <!-- ========================= -->
 
-<div class="background-login"></div>
+<div class="bg-login"></div>
+<div class="bg-dashboard"></div>
 
-<div class="dark-overlay"></div>
+<div class="bg-overlay"></div>
 
-<div class="green-blur"></div>
-<div class="blue-blur"></div>
+<div class="blur blur-green"></div>
+<div class="blur blur-blue"></div>
 
 <!-- ========================= -->
 <!-- LOGIN -->
 <!-- ========================= -->
 
-<section class="auth-screen" id="authScreen">
+<section class="auth-screen" id="login-screen">
 
 <div class="auth-card">
 
@@ -42,12 +44,12 @@
 
 <div class="auth-left">
 
-<div class="auth-overlay"></div>
+<div class="auth-gradient"></div>
 
 <div class="auth-content">
 
-<div class="auth-tag">
-WORLD BMX SYSTEM
+<div class="auth-badge">
+WORLD BMX PLATFORM
 </div>
 
 <h1>
@@ -56,8 +58,8 @@ LOGIC
 </h1>
 
 <p>
-Plataforma profesional BMX diseñada para pilotos élite.<br>
-Controla rendimiento, rankings mundiales y estadísticas avanzadas.
+Plataforma profesional BMX diseñada para pilotos élite.
+Controla rendimiento, estadísticas y rankings mundiales.
 </p>
 
 <div class="auth-stats">
@@ -93,11 +95,11 @@ GATE<span>LOGIC</span>
 
 <div class="tabs-auth">
 
-<button class="tab-auth active-tab" onclick="showLogin()">
+<button id="loginTab" class="tab-auth active-tab" onclick="showLogin()">
 Iniciar Sesión
 </button>
 
-<button class="tab-auth" onclick="showRegister()">
+<button id="registerTab" class="tab-auth" onclick="showRegister()">
 Crear Cuenta
 </button>
 
@@ -108,16 +110,16 @@ Crear Cuenta
 <div id="loginBox">
 
 <div class="input-group">
-<label>Correo electrónico</label>
-<input type="email" placeholder="correo@gmail.com">
+<label>CORREO ELECTRÓNICO</label>
+<input id="loginEmail" type="email" placeholder="correo@gmail.com">
 </div>
 
 <div class="input-group">
-<label>Contraseña</label>
-<input type="password" placeholder="••••••••">
+<label>CONTRASEÑA</label>
+<input id="loginPass" type="password" placeholder="••••••••">
 </div>
 
-<button class="primary-btn" onclick="enterDashboard()">
+<button class="primary-btn" onclick="login()">
 ENTRAR AL SISTEMA
 </button>
 
@@ -128,28 +130,29 @@ ENTRAR AL SISTEMA
 <div id="registerBox" class="hidden">
 
 <div class="input-group">
-<label>Nombre Completo</label>
-<input type="text" placeholder="Tu nombre">
+<label>NOMBRE COMPLETO</label>
+<input id="name" type="text" placeholder="Tu nombre">
 </div>
 
 <div class="input-group">
-<label>Usuario</label>
-<input type="text" placeholder="@usuario">
+<label>USUARIO</label>
+<input id="username" type="text" placeholder="@usuario">
 </div>
 
 <div class="grid-2">
 
 <div class="input-group">
-<label>Peso</label>
-<input type="text" placeholder="72KG">
+<label>PESO</label>
+<input id="peso" type="text" placeholder="72KG">
 </div>
 
 <div class="input-group">
-<label>Categoría BMX</label>
 
-<select class="select-premium">
+<label>CATEGORÍA BMX</label>
 
-<option>Selecciona una categoría</option>
+<select id="categoria" class="select-premium">
+
+<option value="">Selecciona una categoría</option>
 
 <optgroup label="INFANTIL">
 <option>Balance / Strider</option>
@@ -181,16 +184,16 @@ ENTRAR AL SISTEMA
 </div>
 
 <div class="input-group">
-<label>Correo electrónico</label>
-<input type="email" placeholder="correo@gmail.com">
+<label>CORREO ELECTRÓNICO</label>
+<input id="email" type="email" placeholder="correo@gmail.com">
 </div>
 
 <div class="input-group">
-<label>Contraseña</label>
-<input type="password" placeholder="••••••••">
+<label>CONTRASEÑA</label>
+<input id="password" type="password" placeholder="••••••••">
 </div>
 
-<button class="primary-btn">
+<button class="primary-btn" onclick="register()">
 CREAR CUENTA
 </button>
 
@@ -207,8 +210,6 @@ CREAR CUENTA
 <!-- ========================= -->
 
 <section class="dashboard hidden" id="dashboard">
-
-<div class="dashboard-bg"></div>
 
 <!-- SIDEBAR -->
 
@@ -243,11 +244,6 @@ GX
 </button>
 
 <button class="menu-btn">
-<i class="fa-solid fa-code-compare"></i>
-<span>Comparar</span>
-</button>
-
-<button class="menu-btn">
 <i class="fa-solid fa-user"></i>
 <span>Perfil</span>
 </button>
@@ -256,7 +252,7 @@ GX
 
 </div>
 
-<button class="logout-btn">
+<button class="logout-btn" onclick="logout()">
 <i class="fa-solid fa-right-from-bracket"></i>
 Cerrar sesión
 </button>
@@ -274,11 +270,11 @@ Cerrar sesión
 <div>
 
 <h1 class="main-title">
-Hola <span>Rider</span>
+Hola <span id="user-name">Rider</span>
 </h1>
 
 <p class="subtitle">
-Panel competitivo BMX PRO
+Sistema profesional BMX Analytics
 </p>
 
 </div>
@@ -297,8 +293,6 @@ ONLINE
 
 <section class="hero">
 
-<div class="hero-overlay"></div>
-
 <div class="hero-content">
 
 <div class="hero-left">
@@ -314,8 +308,7 @@ WIN EVERYTHING.
 </h2>
 
 <p>
-Sistema inteligente de rendimiento BMX.
-Analiza tiempos, velocidad y domina rankings mundiales.
+Analiza tiempos, velocidad, rendimiento y domina rankings mundiales BMX.
 </p>
 
 <div class="hero-actions">
@@ -336,12 +329,12 @@ PRO ANALYTICS
 
 <div class="mini-stat">
 <h3>TOP SPEED</h3>
-<span>52</span>
+<span id="max-speed-display">52</span>
 </div>
 
 <div class="mini-stat">
 <h3>BEST TIME</h3>
-<span>31.2</span>
+<span id="best-time">31.2</span>
 </div>
 
 </div>
@@ -350,7 +343,7 @@ PRO ANALYTICS
 
 </section>
 
-<!-- KPI -->
+<!-- KPIS -->
 
 <section class="kpi-grid">
 
@@ -400,8 +393,8 @@ PRO ANALYTICS
 </div>
 
 <div>
-<h3>Duelos Activos</h3>
-<p>4</p>
+<h3>Duelos</h3>
+<p>4 Activos</p>
 </div>
 
 </div>
@@ -414,7 +407,7 @@ PRO ANALYTICS
 
 <!-- LEFT -->
 
-<div class="left-column">
+<div>
 
 <div class="panel">
 
@@ -422,28 +415,32 @@ PRO ANALYTICS
 <h3>Nuevo Entrenamiento</h3>
 </div>
 
+<form id="data-form">
+
 <div class="grid-2">
 
 <div class="input-group">
-<label>Tiempo</label>
-<input type="text" placeholder="31.2s">
+<label>TIEMPO</label>
+<input id="gate-time" type="text" placeholder="31.2">
 </div>
 
 <div class="input-group">
-<label>Velocidad</label>
-<input type="text" placeholder="52 KM/H">
+<label>VELOCIDAD</label>
+<input id="top-speed" type="text" placeholder="52">
 </div>
 
 </div>
 
 <div class="input-group">
-<label>Comentarios</label>
+<label>COMENTARIOS</label>
 <textarea placeholder="Describe el entrenamiento..."></textarea>
 </div>
 
-<button class="primary-btn">
+<button type="submit" class="primary-btn">
 GUARDAR ENTRENAMIENTO
 </button>
+
+</form>
 
 </div>
 
@@ -461,32 +458,16 @@ GUARDAR ENTRENAMIENTO
 <th>Fecha</th>
 <th>Tiempo</th>
 <th>Velocidad</th>
-<th>Estado</th>
 </tr>
 
 </thead>
 
-<tbody>
+<tbody id="history-body">
 
 <tr>
 <td>02 MAY</td>
 <td>31.2s</td>
 <td>52 KM/H</td>
-<td><span class="status green">PRO</span></td>
-</tr>
-
-<tr>
-<td>28 ABR</td>
-<td>32.0s</td>
-<td>49 KM/H</td>
-<td><span class="status blue">TOP</span></td>
-</tr>
-
-<tr>
-<td>21 ABR</td>
-<td>33.1s</td>
-<td>47 KM/H</td>
-<td><span class="status gray">NORMAL</span></td>
 </tr>
 
 </tbody>
@@ -499,7 +480,7 @@ GUARDAR ENTRENAMIENTO
 
 <!-- RIGHT -->
 
-<div class="right-column">
+<div>
 
 <div class="panel">
 
@@ -513,13 +494,8 @@ GUARDAR ENTRENAMIENTO
 </div>
 
 <div class="feed-post">
-<b>@speedrace</b>
-<p>Entrenamiento extremo completado ⚡</p>
-</div>
-
-<div class="feed-post">
 <b>@elitebmx</b>
-<p>Nueva competencia este fin de semana 🏆</p>
+<p>Entrenamiento extremo completado ⚡</p>
 </div>
 
 </div>
@@ -527,7 +503,7 @@ GUARDAR ENTRENAMIENTO
 <div class="panel">
 
 <div class="panel-header">
-<h3>Top Mundial</h3>
+<h3>Ranking Mundial</h3>
 </div>
 
 <div class="ranking-item">
@@ -545,11 +521,6 @@ GUARDAR ENTRENAMIENTO
 <p>BMX Ghost</p>
 </div>
 
-<div class="ranking-item">
-<span>#4</span>
-<p>Turbo Racer</p>
-</div>
-
 </div>
 
 </div>
@@ -560,24 +531,39 @@ GUARDAR ENTRENAMIENTO
 
 </section>
 
+<!-- TOAST -->
+
+<div id="toast-container"></div>
+
+<!-- ========================= -->
+<!-- SCRIPTS -->
+<!-- ========================= -->
+
 <script>
 
 function showRegister(){
+
 document.getElementById("loginBox").classList.add("hidden");
 document.getElementById("registerBox").classList.remove("hidden");
+
+document.getElementById("registerTab").classList.add("active-tab");
+document.getElementById("loginTab").classList.remove("active-tab");
+
 }
 
 function showLogin(){
+
 document.getElementById("registerBox").classList.add("hidden");
 document.getElementById("loginBox").classList.remove("hidden");
-}
 
-function enterDashboard(){
-document.getElementById("authScreen").classList.add("hidden");
-document.getElementById("dashboard").classList.remove("hidden");
+document.getElementById("loginTab").classList.add("active-tab");
+document.getElementById("registerTab").classList.remove("active-tab");
+
 }
 
 </script>
+
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
