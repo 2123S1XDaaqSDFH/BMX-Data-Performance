@@ -1,114 +1,196 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GATELOGIC X</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
+<title>GATELOGIC | BMX PRO SYSTEM</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-<link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
+<!-- ========================= -->
 <!-- BACKGROUND -->
-<div class="bg-video"></div>
-<div class="bg-overlay"></div>
-<div class="gradient-ball ball-1"></div>
-<div class="gradient-ball ball-2"></div>
+<!-- ========================= -->
 
-<!-- AUTH -->
-<section id="login-screen" class="auth-screen">
+<div class="background-login"></div>
+
+<div class="dark-overlay"></div>
+
+<div class="green-blur"></div>
+<div class="blue-blur"></div>
+
+<!-- ========================= -->
+<!-- LOGIN -->
+<!-- ========================= -->
+
+<section class="auth-screen" id="authScreen">
 
 <div class="auth-card">
 
-<div class="logo-wrap">
-<h1>GATE<span>LOGIC</span></h1>
-<p>WORLD BMX SYSTEM</p>
+<!-- LEFT -->
+
+<div class="auth-left">
+
+<div class="auth-overlay"></div>
+
+<div class="auth-content">
+
+<div class="auth-tag">
+WORLD BMX SYSTEM
 </div>
 
-<div class="tabs">
-<button onclick="switchTab('login')" class="tab-btn active-tab" id="login-tab">
-LOGIN
+<h1>
+GATE<br>
+LOGIC
+</h1>
+
+<p>
+Plataforma profesional BMX diseñada para pilotos élite.<br>
+Controla rendimiento, rankings mundiales y estadísticas avanzadas.
+</p>
+
+<div class="auth-stats">
+
+<div class="auth-stat">
+<h3>+12K</h3>
+<span>PILOTOS</span>
+</div>
+
+<div class="auth-stat">
+<h3>42</h3>
+<span>PAÍSES</span>
+</div>
+
+<div class="auth-stat">
+<h3>PRO</h3>
+<span>ANALYTICS</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="auth-right">
+
+<div class="logo-auth">
+GATE<span>LOGIC</span>
+</div>
+
+<div class="tabs-auth">
+
+<button class="tab-auth active-tab" onclick="showLogin()">
+Iniciar Sesión
 </button>
 
-<button onclick="switchTab('register')" class="tab-btn" id="register-tab">
-REGISTER
+<button class="tab-auth" onclick="showRegister()">
+Crear Cuenta
 </button>
+
 </div>
 
 <!-- LOGIN -->
-<div id="login-box">
+
+<div id="loginBox">
 
 <div class="input-group">
-<label>Email</label>
-<input type="email" id="loginEmail" placeholder="email@gmail.com">
+<label>Correo electrónico</label>
+<input type="email" placeholder="correo@gmail.com">
 </div>
 
 <div class="input-group">
-<label>Password</label>
-<input type="password" id="loginPass" placeholder="********">
+<label>Contraseña</label>
+<input type="password" placeholder="••••••••">
 </div>
 
-<button onclick="login()" class="primary-btn">
-ENTRAR
+<button class="primary-btn" onclick="enterDashboard()">
+ENTRAR AL SISTEMA
 </button>
 
 </div>
 
 <!-- REGISTER -->
-<div id="register-box" class="hidden">
+
+<div id="registerBox" class="hidden">
 
 <div class="input-group">
-<label>Nombre</label>
-<input id="name" placeholder="Nombre completo">
+<label>Nombre Completo</label>
+<input type="text" placeholder="Tu nombre">
 </div>
 
 <div class="input-group">
-<label>Username</label>
-<input id="username" placeholder="@usuario">
+<label>Usuario</label>
+<input type="text" placeholder="@usuario">
 </div>
 
 <div class="grid-2">
 
 <div class="input-group">
 <label>Peso</label>
-<input id="peso" placeholder="70">
+<input type="text" placeholder="72KG">
 </div>
 
 <div class="input-group">
-<label>Categoría</label>
-<select id="categoria">
-<option value="Junior">Junior</option>
-<option value="Elite">Elite</option>
-<option value="Pro">Pro</option>
+<label>Categoría BMX</label>
+
+<select class="select-premium">
+
+<option>Selecciona una categoría</option>
+
+<optgroup label="INFANTIL">
+<option>Balance / Strider</option>
+<option>Mini Riders</option>
+</optgroup>
+
+<optgroup label="FORMATIVAS">
+<option>Principiantes</option>
+<option>Novatos</option>
+<option>Expertos</option>
+</optgroup>
+
+<optgroup label="CRUCERO & MÁSTER">
+<option>Crucero</option>
+<option>Máster</option>
+<option>Vet Pro</option>
+</optgroup>
+
+<optgroup label="COMPETITIVO">
+<option>Junior</option>
+<option>Sub-23</option>
+<option>Élite</option>
+</optgroup>
+
 </select>
-</div>
 
 </div>
 
-<div class="input-group">
-<label>Email</label>
-<input id="email" placeholder="email@gmail.com">
 </div>
 
 <div class="input-group">
-<label>Password</label>
-<input type="password" id="password" placeholder="********">
+<label>Correo electrónico</label>
+<input type="email" placeholder="correo@gmail.com">
 </div>
 
-<button onclick="register()" class="primary-btn">
+<div class="input-group">
+<label>Contraseña</label>
+<input type="password" placeholder="••••••••">
+</div>
+
+<button class="primary-btn">
 CREAR CUENTA
 </button>
 
@@ -116,119 +198,136 @@ CREAR CUENTA
 
 </div>
 
+</div>
+
 </section>
 
+<!-- ========================= -->
 <!-- DASHBOARD -->
-<section id="dashboard" class="hidden dashboard">
+<!-- ========================= -->
+
+<section class="dashboard hidden" id="dashboard">
+
+<div class="dashboard-bg"></div>
 
 <!-- SIDEBAR -->
+
 <aside class="sidebar">
 
-<div class="sidebar-top">
+<div>
 
 <div class="sidebar-logo">
 GX
 </div>
 
-<div class="menu">
+<div class="sidebar-menu">
 
-<div class="menu-item active-menu" onclick="showSection('home')">
+<button class="menu-btn active-menu">
 <i class="fa-solid fa-chart-line"></i>
 <span>Dashboard</span>
-</div>
+</button>
 
-<div class="menu-item" onclick="showSection('ranking')">
+<button class="menu-btn">
 <i class="fa-solid fa-trophy"></i>
 <span>Ranking</span>
-</div>
+</button>
 
-<div class="menu-item" onclick="showSection('feed')">
+<button class="menu-btn">
 <i class="fa-solid fa-fire"></i>
 <span>Feed</span>
-</div>
+</button>
 
-<div class="menu-item" onclick="showSection('duelos')">
+<button class="menu-btn">
 <i class="fa-solid fa-bolt"></i>
 <span>Duelos</span>
-</div>
+</button>
 
-<div class="menu-item" onclick="showSection('compare')">
+<button class="menu-btn">
 <i class="fa-solid fa-code-compare"></i>
 <span>Comparar</span>
-</div>
+</button>
 
-<div class="menu-item" onclick="showSection('perfil')">
+<button class="menu-btn">
 <i class="fa-solid fa-user"></i>
 <span>Perfil</span>
-</div>
-
-</div>
-
-</div>
-
-<div class="sidebar-bottom">
-
-<button onclick="logout()" class="logout-btn">
-<i class="fa-solid fa-right-from-bracket"></i>
-Cerrar sesión
 </button>
 
 </div>
 
+</div>
+
+<button class="logout-btn">
+<i class="fa-solid fa-right-from-bracket"></i>
+Cerrar sesión
+</button>
+
 </aside>
 
-<!-- CONTENT -->
+<!-- MAIN -->
+
 <main class="main-content">
 
-<!-- TOP -->
+<!-- TOPBAR -->
+
 <div class="topbar">
 
 <div>
-<h2 class="main-title">
-Hola <span id="user-name">Piloto</span>
-</h2>
+
+<h1 class="main-title">
+Hola <span>Rider</span>
+</h1>
 
 <p class="subtitle">
-Sistema competitivo BMX PRO
+Panel competitivo BMX PRO
 </p>
+
 </div>
 
-<div class="top-actions">
+<div class="online-status">
 
-<div class="live-badge">
-<div class="live-dot"></div>
+<div class="online-dot"></div>
+
 ONLINE
-</div>
 
 </div>
 
 </div>
 
-<!-- HOME -->
-<section id="section-home" class="content-section">
+<!-- HERO -->
 
-<div class="hero-card">
+<section class="hero">
 
-<div>
+<div class="hero-overlay"></div>
 
-<h1>
-TRACK EVERYTHING.
+<div class="hero-content">
+
+<div class="hero-left">
+
+<div class="hero-tag">
+WORLD BMX ANALYTICS
+</div>
+
+<h2>
+TRACK.<br>
+EVERYTHING.<br>
 WIN EVERYTHING.
-</h1>
+</h2>
 
 <p>
 Sistema inteligente de rendimiento BMX.
-Analiza, compite y domina rankings mundiales.
+Analiza tiempos, velocidad y domina rankings mundiales.
 </p>
 
 <div class="hero-actions">
-<button class="primary-btn">
+
+<button class="green-btn">
 WORLD RANKING
 </button>
 
 <button class="secondary-btn">
 PRO ANALYTICS
 </button>
+
 </div>
 
 </div>
@@ -237,296 +336,248 @@ PRO ANALYTICS
 
 <div class="mini-stat">
 <h3>TOP SPEED</h3>
-<span id="max-speed-display">0</span>
+<span>52</span>
 </div>
 
 <div class="mini-stat">
 <h3>BEST TIME</h3>
-<span id="best-time">--</span>
+<span>31.2</span>
 </div>
 
 </div>
 
 </div>
+
+</section>
 
 <!-- KPI -->
-<div class="kpi-grid">
+
+<section class="kpi-grid">
 
 <div class="kpi-card">
+
 <div class="kpi-icon">
 <i class="fa-solid fa-gauge-high"></i>
 </div>
 
 <div>
-<h4>Velocidad Máxima</h4>
-<p id="speed-kpi">0 KM/H</p>
+<h3>Velocidad Máxima</h3>
+<p>52 KM/H</p>
 </div>
+
 </div>
 
 <div class="kpi-card">
+
 <div class="kpi-icon">
 <i class="fa-solid fa-stopwatch"></i>
 </div>
 
 <div>
-<h4>Mejor Tiempo</h4>
-<p id="time-kpi">--</p>
+<h3>Mejor Tiempo</h3>
+<p>31.2s</p>
 </div>
+
 </div>
 
 <div class="kpi-card">
+
 <div class="kpi-icon">
 <i class="fa-solid fa-earth-americas"></i>
 </div>
 
 <div>
-<h4>Ranking Global</h4>
+<h3>Ranking Mundial</h3>
 <p>#12</p>
 </div>
+
 </div>
 
 <div class="kpi-card">
+
 <div class="kpi-icon">
 <i class="fa-solid fa-bolt"></i>
 </div>
 
 <div>
-<h4>Duelos</h4>
-<p>4 Activos</p>
-</div>
+<h3>Duelos Activos</h3>
+<p>4</p>
 </div>
 
 </div>
+
+</section>
 
 <!-- GRID -->
+
 <div class="dashboard-grid">
 
 <!-- LEFT -->
-<div class="glass-card big-card">
 
-<div class="card-header">
-<h3>Performance</h3>
-</div>
+<div class="left-column">
 
-<canvas id="performanceChart"></canvas>
+<div class="panel">
 
-</div>
-
-<!-- RIGHT -->
-<div class="glass-card">
-
-<div class="card-header">
+<div class="panel-header">
 <h3>Nuevo Entrenamiento</h3>
 </div>
 
-<form id="data-form">
+<div class="grid-2">
 
 <div class="input-group">
-<label>Tiempo Gate</label>
-<input id="gate-time" placeholder="3.421">
+<label>Tiempo</label>
+<input type="text" placeholder="31.2s">
 </div>
 
 <div class="input-group">
 <label>Velocidad</label>
-<input id="top-speed" placeholder="61">
+<input type="text" placeholder="52 KM/H">
+</div>
+
 </div>
 
 <div class="input-group">
-<label>Sensación</label>
-<input type="range" min="1" max="10" id="feeling-range">
+<label>Comentarios</label>
+<textarea placeholder="Describe el entrenamiento..."></textarea>
 </div>
 
 <button class="primary-btn">
-Guardar sesión
+GUARDAR ENTRENAMIENTO
 </button>
 
-</form>
-
 </div>
 
-</div>
+<div class="panel">
 
-<!-- TABLE -->
-<div class="glass-card">
-
-<div class="card-header">
-<h3>Historial</h3>
+<div class="panel-header">
+<h3>Historial BMX</h3>
 </div>
 
 <table class="history-table">
 
 <thead>
+
 <tr>
+<th>Fecha</th>
 <th>Tiempo</th>
 <th>Velocidad</th>
+<th>Estado</th>
 </tr>
+
 </thead>
 
-<tbody id="history-body"></tbody>
+<tbody>
+
+<tr>
+<td>02 MAY</td>
+<td>31.2s</td>
+<td>52 KM/H</td>
+<td><span class="status green">PRO</span></td>
+</tr>
+
+<tr>
+<td>28 ABR</td>
+<td>32.0s</td>
+<td>49 KM/H</td>
+<td><span class="status blue">TOP</span></td>
+</tr>
+
+<tr>
+<td>21 ABR</td>
+<td>33.1s</td>
+<td>47 KM/H</td>
+<td><span class="status gray">NORMAL</span></td>
+</tr>
+
+</tbody>
 
 </table>
 
 </div>
 
-</section>
-
-<!-- RANKING -->
-<section id="section-ranking" class="content-section hidden">
-
-<div class="section-title">
-<h2>WORLD RANKING</h2>
-<p>Clasificación mundial BMX</p>
 </div>
 
-<div id="rankingList" class="ranking-grid"></div>
+<!-- RIGHT -->
 
-</section>
+<div class="right-column">
 
-<!-- FEED -->
-<section id="section-feed" class="content-section hidden">
+<div class="panel">
 
-<div class="section-title">
-<h2>COMMUNITY FEED</h2>
-<p>Publicaciones globales</p>
+<div class="panel-header">
+<h3>Feed BMX</h3>
 </div>
 
-<div class="glass-card post-create">
-
-<textarea id="postText" placeholder="Comparte tu entrenamiento..."></textarea>
-
-<button onclick="createPost()" class="primary-btn">
-PUBLICAR
-</button>
-
+<div class="feed-post">
+<b>@riderpro</b>
+<p>Nuevo récord nacional BMX 🔥</p>
 </div>
 
-<div id="feedList" class="feed-grid"></div>
-
-</section>
-
-<!-- DUELOS -->
-<section id="section-duelos" class="content-section hidden">
-
-<div class="section-title">
-<h2>DUELS</h2>
-<p>Retos entre pilotos</p>
+<div class="feed-post">
+<b>@speedrace</b>
+<p>Entrenamiento extremo completado ⚡</p>
 </div>
 
-<div class="glass-card duel-create">
-
-<input id="rivalEmail" placeholder="Email del rival">
-
-<button onclick="createDuel()" class="primary-btn">
-RETAR
-</button>
-
-</div>
-
-<div id="duelList" class="duel-grid"></div>
-
-</section>
-
-<!-- COMPARE -->
-<section id="section-compare" class="content-section hidden">
-
-<div class="section-title">
-<h2>COMPARE PILOTS</h2>
-<p>Comparador profesional</p>
-</div>
-
-<div class="compare-grid">
-
-<div class="glass-card">
-
-<input id="pilot1" placeholder="Email piloto 1">
-
-</div>
-
-<div class="glass-card">
-
-<input id="pilot2" placeholder="Email piloto 2">
-
+<div class="feed-post">
+<b>@elitebmx</b>
+<p>Nueva competencia este fin de semana 🏆</p>
 </div>
 
 </div>
 
-<button onclick="comparePilots()" class="primary-btn compare-btn">
-COMPARAR
-</button>
+<div class="panel">
 
-<div id="compareResult"></div>
+<div class="panel-header">
+<h3>Top Mundial</h3>
+</div>
 
-</section>
+<div class="ranking-item">
+<span>#1</span>
+<p>Mateo Rider</p>
+</div>
 
-<!-- PROFILE -->
-<section id="section-perfil" class="content-section hidden">
+<div class="ranking-item">
+<span>#2</span>
+<p>Speed Killer</p>
+</div>
 
-<div class="profile-banner">
+<div class="ranking-item">
+<span>#3</span>
+<p>BMX Ghost</p>
+</div>
 
-<div class="profile-overlay"></div>
-
-<div class="profile-content">
-
-<img src="https://i.pravatar.cc/300" id="profile-pic">
-
-<div>
-<h2 id="profile-name">
-Piloto
-</h2>
-
-<p>
-GATELOGIC ELITE RIDER
-</p>
+<div class="ranking-item">
+<span>#4</span>
+<p>Turbo Racer</p>
 </div>
 
 </div>
 
 </div>
 
-</section>
+</div>
 
 </main>
 
 </section>
 
-<!-- TOAST -->
-<div id="toast-container"></div>
-
-<script type="module" src="app.js"></script>
-
 <script>
-function showSection(section){
 
-document.querySelectorAll('.content-section')
-.forEach(s=>s.classList.add('hidden'));
-
-document
-.getElementById('section-'+section)
-.classList.remove('hidden');
-
-document.querySelectorAll('.menu-item')
-.forEach(m=>m.classList.remove('active-menu'));
-
-event.currentTarget.classList.add('active-menu');
+function showRegister(){
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("registerBox").classList.remove("hidden");
 }
 
-function switchTab(type){
-
-document.getElementById('login-box')
-.classList.toggle('hidden',type !== 'login');
-
-document.getElementById('register-box')
-.classList.toggle('hidden',type === 'login');
-
-document.getElementById('login-tab')
-.classList.toggle('active-tab',type==='login');
-
-document.getElementById('register-tab')
-.classList.toggle('active-tab',type==='register');
+function showLogin(){
+document.getElementById("registerBox").classList.add("hidden");
+document.getElementById("loginBox").classList.remove("hidden");
 }
+
+function enterDashboard(){
+document.getElementById("authScreen").classList.add("hidden");
+document.getElementById("dashboard").classList.remove("hidden");
+}
+
 </script>
-  
-<script type="module" src="./app.js"></script>
-  
+
 </body>
 </html>
